@@ -1,0 +1,84 @@
+syntax = "proto2";
+
+import "scalapb/scalapb.proto";
+import "google/protobuf/timestamp.proto";
+import "model/stuart.proto";
+
+package app.softnetwork.stuart.client.scala.message;
+
+option (scalapb.options) = {
+    single_file: true
+    flat_package: true
+    import: "app.softnetwork.protobuf.ScalaPBTypeMappers._"
+    import: "app.softnetwork.stuart.client.scala.serialization.StuartPBTypeMappers._"
+};
+
+message ArrayOfString{
+    repeated string values = 1;
+}
+
+message StuartError{
+    required string error = 1;
+    required string message = 2;
+    map<string, ArrayOfString> data = 3 [(scalapb.field).value_type = "Seq[String]"];
+}
+
+message AddressValidated{
+    required bool success = 1;
+}
+
+message ContactRequest{
+    optional string firstname = 1;
+    optional string lastname = 2;
+    optional string phone = 3;
+    optional string email = 4;
+    optional string company = 5;
+}
+
+message Pickup{
+    required string address = 1;
+    optional string comment = 2;
+    optional ContactRequest contact = 3;
+}
+
+message DropOff{
+    optional app.softnetwork.stuart.client.scala.model.PackageType package_type = 1 [(scalapb.field).scala_name = "package_type"];
+    optional string package_description = 2 [(scalapb.field).scala_name = "package_description"];
+    optional string client_reference = 3 [(scalapb.field).scala_name = "client_reference"];
+    required string address = 4;
+    optional string comment = 5;
+    optional ContactRequest contact = 6;
+    optional google.protobuf.Timestamp end_customer_time_window_start = 7 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "end_customer_time_window_start"];
+    optional google.protobuf.Timestamp end_customer_time_window_end = 8 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "end_customer_time_window_end"];
+}
+
+message JobRequest{
+    optional google.protobuf.Timestamp pickup_at = 1 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "pickup_at"];
+    optional google.protobuf.Timestamp dropoff_at = 2 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "dropoff_at"];
+    optional string assignment_code = 3;
+    optional app.softnetwork.stuart.client.scala.model.TransportType transport_type = 4;
+    repeated Pickup pickups = 5;
+    repeated DropOff dropoffs = 6;
+    repeated int32 fleets = 7;
+}
+
+message CalculatePricing{
+    required JobRequest job = 1;
+}
+
+message PricingCalculated{
+    required int64 amount = 1; // VAT excluded
+    required string currency = 2;
+}
+
+message ValidateJob{
+    required JobRequest job = 1;
+}
+
+message JobValidated{
+    optional bool valid = 1;
+}
+
+message CreateJob{
+    required JobRequest job = 1;
+}

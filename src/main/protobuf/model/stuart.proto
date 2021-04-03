@@ -1,0 +1,141 @@
+syntax = "proto2";
+
+import "scalapb/scalapb.proto";
+import "google/protobuf/timestamp.proto";
+
+package app.softnetwork.stuart.client.scala.model;
+
+option (scalapb.options) = {
+    single_file: true
+    flat_package: true
+    import: "app.softnetwork.protobuf.ScalaPBTypeMappers._"
+};
+
+enum JobStatus{
+    new = 0;
+    scheduled = 1;
+    searching = 2;
+    in_progress = 3;
+    finished = 4;
+    canceled = 5;
+    expired = 6;
+}
+
+enum DeliveryStatus{
+    pending = 0;
+    picking = 1;
+    almost_picking = 2;
+    waiting_at_pickup = 3;
+    delivering = 4;
+    almost_delivering = 5;
+    waiting_at_dropoff = 6;
+    delivered = 7;
+    cancelled = 8;
+}
+
+enum TransportType{
+    bike = 0;
+    motorbike = 1;
+    car = 2;
+    cargobike = 3;
+    cargobikexl = 4;
+    motorbikexl = 5;
+}
+
+enum PackageType{
+    xsmall = 0;
+    small = 1;
+    medium = 2;
+    large = 3;
+    xlarge = 4;
+}
+
+message Address{
+    required string street = 1;
+    required string postcode = 2;
+    optional string city = 3;
+    required string country = 4;
+}
+
+message Contact{
+    optional string firstname = 1;
+    optional string lastname = 2;
+    optional string company_name = 3 [(scalapb.field).scala_name = "company_name"];
+    optional string phone = 4;
+    optional string email = 5;
+}
+
+message DeliveryItem{
+    required int32 id = 1;
+    required double latitude = 2;
+    required double longitude = 3;
+    optional string comment = 4;
+    required Address address = 5;
+    optional Contact contact = 6;
+}
+
+message Eta {
+    optional string pickup = 1;
+    optional string dropoff = 2;
+}
+
+message Cancellation{
+    optional string canceled_by = 1 [(scalapb.field).scala_name = "canceled_by"];
+    optional string reason_key = 2 [(scalapb.field).scala_name = "reason_key"];
+    optional string comment = 3;
+}
+
+message Proof{
+    optional string signature_url = 1 [(scalapb.field).scala_name = "signature_url"];
+}
+
+message Delivery {
+    required int64 id = 1;
+    required DeliveryStatus status = 2;
+    optional google.protobuf.Timestamp picked_at = 3 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "picked_at"];
+    optional google.protobuf.Timestamp delivered_at = 4 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "delivered_at"];
+    required string tracking_url = 5 [(scalapb.field).scala_name = "tracking_url"];
+    optional string client_reference = 6 [(scalapb.field).scala_name = "client_reference"];
+    optional string package_description = 7 [(scalapb.field).scala_name = "package_description"];
+    required PackageType package_type = 8 [(scalapb.field).scala_name = "package_type"];
+    required DeliveryItem pickup = 9;
+    required DeliveryItem dropoff = 10;
+    required Eta eta = 11;
+    optional Cancellation cancellation = 12;
+    optional Proof proof = 13;
+}
+
+message Pricing{
+    optional string currency = 1;
+    optional double tax_percentage = 2 [(scalapb.field).scala_name = "tax_percentage"];
+    optional double price_tax_included = 3 [(scalapb.field).scala_name = "price_tax_included"];
+    optional double price_tax_excluded = 4 [(scalapb.field).scala_name = "price_tax_excluded"];
+    optional double tax_amount = 5 [(scalapb.field).scala_name = "tax_amount"];
+    optional string invoice_url = 6 [(scalapb.field).scala_name = "invoice_url"];
+}
+
+message Driver {
+    optional int32 id = 1;
+    optional string display_name = 2 [(scalapb.field).scala_name = "display_name"];
+    optional string phone = 3;
+    optional string picture_url = 4 [(scalapb.field).scala_name = "picture_url"];
+    optional TransportType transport_type = 5 [(scalapb.field).scala_name = "transport_type"];
+    optional double latitude = 6;
+    optional double longitude = 7;
+}
+
+message Job{
+    required int32 id = 1;
+    required JobStatus status = 2;
+    optional PackageType package_type = 3 [(scalapb.field).scala_name = "package_type"];
+    optional TransportType transport_type = 4 [(scalapb.field).scala_name = "transport_type"];
+    optional string assignment_code = 5 [(scalapb.field).scala_name = "assignment_code"];
+    optional google.protobuf.Timestamp pickup_at = 6 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "pickup_at"];
+    optional google.protobuf.Timestamp dropoff_at = 7 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "dropoff_at"];
+    optional string comment = 8;
+    required double distance = 9;
+    required int32 duration = 10;
+    repeated Delivery deliveries = 11;
+    required Pricing pricing = 12;
+    required Driver driver = 13;
+}
