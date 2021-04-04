@@ -42,8 +42,8 @@ val pbSettings = Seq(
 )
 
 resolvers in ThisBuild ++= Seq(
-  "Artifactory" at "https://softnetwork.jfrog.io/artifactory/libs-snapshot-local/",
-  "Artifactory" at "https://softnetwork.jfrog.io/artifactory/libs-release-local/",
+  "Artifactory" at "https://softnetwork.jfrog.io/artifactory/snapshots/",
+  "Artifactory" at "https://softnetwork.jfrog.io/artifactory/releases/",
   Resolver.bintrayRepo("cakesolutions", "maven"),
   Resolver.bintrayRepo("hseeberger", "maven"),
   Resolver.sonatypeRepo("releases"),
