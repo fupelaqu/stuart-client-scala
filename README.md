@@ -119,3 +119,30 @@ message StuartError{
       }
   }
 ```
+
+### Create job
+
+```scala
+  StuartApi().createJob(request) match {
+    case Left(l: StuartError) => // ... do something with StuartError 
+    case Right(r: Job) => // ... do something with Job
+  }
+```
+
+### Load job
+
+```scala
+  StuartApi().createJob(idJob) match {
+    case Left(l: StuartError) => // ... do something with StuartError 
+    case Right(r: Job) => // ... do something with Job
+  }
+```
+
+## Cancel Job
+
+```scala
+  StuartApi().cancelJob(idJob) match {
+    case Left(l: StuartError) => // ... do something with StuartError 
+    case Right(_) => // ... do something
+  }
+```
