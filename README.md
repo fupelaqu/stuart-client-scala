@@ -104,3 +104,18 @@ message StuartError{
     case Right(r: PricingCalculated) => // eg PricingCalculated(amount = 17, currency = EUR)
   }
 ```
+
+### Validate job
+
+```scala
+  StuartApi().validateJob(request) match {
+    case Left(l: StuartError) => // ... do something with StuartError 
+    case Right(r: JobValidated) => 
+      if(r.valid.getOrElse(false)){
+        // ... do stuff
+      }
+      else{
+        // ... do other stuff
+      }
+  }
+```
