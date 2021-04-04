@@ -33,11 +33,10 @@ stuart{
 ### General usage
 
 ```scala
-val result: Either[StuartError, AResponse] = StuartApi().aCallTo(aRequest)
-result match {
-    case Left(l) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
-    case Right(r) => // AResponse
-}
+  StuartApi().aCallTo(aRequest) match {
+    case Left(l: StuartError) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
+    case Right(r: AResponse) => // ...
+  }
 ```
 
 With `StuartError` defined as :
@@ -53,21 +52,20 @@ message StuartError{
 ### Validate address
 
 ```scala
-import app.softnetwork.stuart.client.scala._
-import message._
-import model._
+  import app.softnetwork.stuart.client.scala._
+  import message._
+  import model._
 
-val result: Either[StuartError, AddressValidated] = StuartApi().validateAddress("12 rue rivoli, 75001 Paris")
-result match {
-  case Left(l) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
-  case Right(r) => // AddressValidated
-    if(r.success){
-      // ... do stuff
-    }
-    else{
-      // ... do other stuff
-    }
-}
+  StuartApi().validateAddress("12 rue rivoli, 75001 Paris") match {
+    case Left(l: StuartError) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
+    case Right(r: AddressValidated) => // AddressValidated
+      if(r.success){
+        // ... do stuff
+      }
+      else{
+        // ... do other stuff
+      }
+  }
 ```
 
 ### Calculate pricing
@@ -101,9 +99,8 @@ result match {
       .withPickups(pickups)
       .withDropoffs(dropoffs)
 
-  val result: Either[StuartError, PricingCalculated] = StuartApi().calculatePricing(request)
-  result match {
-    case Left(l) => // ... do something with StuartError 
-    case Right(r) => // eg PricingCalculated(amount = 17, currency = EUR)
+  StuartApi().calculatePricing(request) match {
+    case Left(l: StuartError) => // ... do something with StuartError 
+    case Right(r: PricingCalculated) => // eg PricingCalculated(amount = 17, currency = EUR)
   }
 ```
