@@ -17,4 +17,15 @@ libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.1-
 
 ## Configuration
 
+```json
+stuart{
+  # wether to use sandbox or not - default true
+  dry-run = true
+  # stuart api client id
+  api-client-id = ""
+  # stuart api secret
+  api-secret = ""
+}
+```
+
 ## Usage
