@@ -29,3 +29,25 @@ stuart{
 ```
 
 ## Usage
+
+### Validate address
+
+```scala
+import app.softnetwork.stuart.client.scala._
+import message._
+import model._
+
+import scala.util.{Success, Failure, Try}
+
+val result: Either[StuartError, AddressValidated] = StuartApi().validateAddress("12 rue rivoli, 75001 Paris")
+result match {
+    case Left(l) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
+    case Right(r) => // AddressValidated
+        if(r.success){
+            // ... do stuff
+        }
+        else{
+            // ... other stuff
+        }
+}
+```

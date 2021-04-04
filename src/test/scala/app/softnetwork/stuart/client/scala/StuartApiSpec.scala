@@ -19,7 +19,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
 
   val pickups = List(
     Pickup.defaultInstance
-      .withAddress("2 place du 19 mars 1962, 94400 Vitry")
+      .withAddress("12 rue rivoli, 75001 Paris")
       .withContact(
         ContactRequest.defaultInstance
           .withFirstname("Bobby")
@@ -46,7 +46,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
 
   "StuartApi" must {
     "validate address" in {
-      StuartApi().validateAddress("2 place du 19 mars 1962, 94400 Vitry") match {
+      StuartApi().validateAddress("12 rue rivoli, 75001 Paris") match {
         case Left(l) => fail()
         case Right(r) => r.success shouldBe true
       }
