@@ -68,7 +68,7 @@ message StuartError{
   }
 ```
 
-### Calculate Stuart Pricing
+### Calculate Pricing
 
 ```scala
 
@@ -105,7 +105,7 @@ message StuartError{
   }
 ```
 
-### Validate Stuart Job
+### Validate Job
 
 ```scala
   StuartApi().validateJob(request) match {
@@ -120,7 +120,7 @@ message StuartError{
   }
 ```
 
-### Create Stuart Job
+### Create Job
 
 ```scala
   StuartApi().createJob(request) match {
@@ -129,7 +129,7 @@ message StuartError{
   }
 ```
 
-### Load Stuart Job
+### Load Job
 
 ```scala
   StuartApi().loadJob(idJob) match {
@@ -138,7 +138,7 @@ message StuartError{
   }
 ```
 
-### Cancel Stuart Job
+### Cancel Job
 
 ```scala
   StuartApi().cancelJob(idJob) match {
