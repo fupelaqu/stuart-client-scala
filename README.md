@@ -57,17 +57,53 @@ import app.softnetwork.stuart.client.scala._
 import message._
 import model._
 
-import scala.util.{Success, Failure, Try}
-
 val result: Either[StuartError, AddressValidated] = StuartApi().validateAddress("12 rue rivoli, 75001 Paris")
 result match {
-    case Left(l) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
-    case Right(r) => // AddressValidated
-        if(r.success){
-            // ... do stuff
-        }
-        else{
-            // ... do other stuff
-        }
+  case Left(l) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
+  case Right(r) => // AddressValidated
+    if(r.success){
+      // ... do stuff
+    }
+    else{
+      // ... do other stuff
+    }
 }
+```
+
+### Calculate pricing
+
+```scala
+
+  val pickups = List(
+    Pickup.defaultInstance
+      .withAddress("12 rue rivoli, 75001 Paris")
+      .withContact(
+        ContactRequest.defaultInstance
+          .withFirstname("Bobby")
+          .withLastname("Brown")
+          .withPhone("+33610101010")
+      )
+  )
+  val dropoffs = List(
+    DropOff.defaultInstance
+      .withPackageType(PackageType.small)
+      .withAddress("Les Arches d'Issy, 92130 Issy-Les-Moulineaux")
+      .withContact(
+        ContactRequest.defaultInstance
+          .withFirstname("Dany")
+          .withLastname("Dan")
+          .withPhone("+33611112222")
+      )
+  )
+  val request =
+    JobRequest.defaultInstance
+      .withTransportType(TransportType.bike)
+      .withPickups(pickups)
+      .withDropoffs(dropoffs)
+
+  val result: Either[StuartError, PricingCalculated] = StuartApi().calculatePricing(request)
+  result match {
+    case Left(l) => // ... do something with StuartError 
+    case Right(r) => // eg PricingCalculated(amount = 17, currency = EUR)
+  }
 ```
