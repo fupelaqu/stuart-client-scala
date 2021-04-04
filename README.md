@@ -132,7 +132,7 @@ message StuartError{
 ### Load job
 
 ```scala
-  StuartApi().createJob(idJob) match {
+  StuartApi().loadJob(idJob) match {
     case Left(l: StuartError) => // ... do something with StuartError 
     case Right(r: Job) => // ... do something with Job
   }
