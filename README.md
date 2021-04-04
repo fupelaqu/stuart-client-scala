@@ -30,6 +30,26 @@ stuart{
 
 ## Usage
 
+### General usage
+
+```scala
+val result: Either[StuartError, AResponse] = StuartApi().aCallTo(aRequest)
+result match {
+    case Left(l) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
+    case Right(r) => // AResponse
+}
+```
+
+With `StuartError` defined as :
+
+```
+message StuartError{
+    required string error = 1;
+    required string message = 2;
+    map<string, ArrayOfString> data = 3 [(scalapb.field).value_type = "Seq[String]"];
+}
+```
+
 ### Validate address
 
 ```scala
@@ -47,7 +67,7 @@ result match {
             // ... do stuff
         }
         else{
-            // ... other stuff
+            // ... do other stuff
         }
 }
 ```
