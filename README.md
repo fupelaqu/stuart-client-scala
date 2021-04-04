@@ -49,7 +49,7 @@ message StuartError{
 }
 ```
 
-### Validate address
+### Validate Address
 
 ```scala
   import app.softnetwork.stuart.client.scala._
@@ -68,7 +68,7 @@ message StuartError{
   }
 ```
 
-### Calculate pricing
+### Calculate Stuart Pricing
 
 ```scala
 
@@ -105,7 +105,7 @@ message StuartError{
   }
 ```
 
-### Validate job
+### Validate Stuart Job
 
 ```scala
   StuartApi().validateJob(request) match {
@@ -120,7 +120,7 @@ message StuartError{
   }
 ```
 
-### Create job
+### Create Stuart Job
 
 ```scala
   StuartApi().createJob(request) match {
@@ -129,7 +129,7 @@ message StuartError{
   }
 ```
 
-### Load job
+### Load Stuart Job
 
 ```scala
   StuartApi().loadJob(idJob) match {
@@ -138,7 +138,7 @@ message StuartError{
   }
 ```
 
-## Cancel Job
+### Cancel Stuart Job
 
 ```scala
   StuartApi().cancelJob(idJob) match {
