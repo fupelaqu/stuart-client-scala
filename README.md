@@ -33,10 +33,10 @@ stuart{
 ### General usage
 
 ```scala
-  StuartApi().aCallTo(aRequest) match {
-    case Left(l: StuartError) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
-    case Right(r: AResponse) => // ...
-  }
+StuartApi().aCallTo(aRequest) match {
+  case Left(l: StuartError) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
+  case Right(r: AResponse) => // ...
+}
 ```
 
 With `StuartError` defined as :
@@ -52,97 +52,97 @@ message StuartError{
 ### Validate Address
 
 ```scala
-  import app.softnetwork.stuart.client.scala._
-  import message._
-  import model._
+import app.softnetwork.stuart.client.scala._
+import message._
+import model._
 
-  StuartApi().validateAddress("12 rue rivoli, 75001 Paris") match {
-    case Left(l: StuartError) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
-    case Right(r: AddressValidated) => // AddressValidated
-      if(r.success){
-        // ... do stuff
-      }
-      else{
-        // ... do other stuff
-      }
-  }
+StuartApi().validateAddress("12 rue rivoli, 75001 Paris") match {
+  case Left(l: StuartError) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
+  case Right(r: AddressValidated) => // AddressValidated
+    if(r.success){
+      // ... do stuff
+    }
+    else{
+      // ... do other stuff
+    }
+}
 ```
 
 ### Calculate Pricing
 
 ```scala
 
-  val pickups = List(
-    Pickup.defaultInstance
-      .withAddress("12 rue rivoli, 75001 Paris")
-      .withContact(
-        ContactRequest.defaultInstance
-          .withFirstname("Bobby")
-          .withLastname("Brown")
-          .withPhone("+33610101010")
-      )
-  )
-  val dropoffs = List(
-    DropOff.defaultInstance
-      .withPackageType(PackageType.small)
-      .withAddress("Les Arches d'Issy, 92130 Issy-Les-Moulineaux")
-      .withContact(
-        ContactRequest.defaultInstance
-          .withFirstname("Dany")
-          .withLastname("Dan")
-          .withPhone("+33611112222")
-      )
-  )
-  val request =
-    JobRequest.defaultInstance
-      .withTransportType(TransportType.bike)
-      .withPickups(pickups)
-      .withDropoffs(dropoffs)
+val pickups = List(
+  Pickup.defaultInstance
+    .withAddress("12 rue rivoli, 75001 Paris")
+    .withContact(
+      ContactRequest.defaultInstance
+        .withFirstname("Bobby")
+        .withLastname("Brown")
+        .withPhone("+33610101010")
+    )
+)
+val dropoffs = List(
+  DropOff.defaultInstance
+    .withPackageType(PackageType.small)
+    .withAddress("Les Arches d'Issy, 92130 Issy-Les-Moulineaux")
+    .withContact(
+      ContactRequest.defaultInstance
+        .withFirstname("Dany")
+        .withLastname("Dan")
+        .withPhone("+33611112222")
+    )
+)
+val request =
+  JobRequest.defaultInstance
+    .withTransportType(TransportType.bike)
+    .withPickups(pickups)
+    .withDropoffs(dropoffs)
 
-  StuartApi().calculatePricing(request) match {
-    case Left(l: StuartError) => // ... do something with StuartError 
-    case Right(r: PricingCalculated) => // eg PricingCalculated(amount = 17, currency = EUR)
-  }
+StuartApi().calculatePricing(request) match {
+  case Left(l: StuartError) => // ... do something with StuartError 
+  case Right(r: PricingCalculated) => // eg PricingCalculated(amount = 17, currency = EUR)
+}
 ```
 
 ### Validate Job
 
 ```scala
-  StuartApi().validateJob(request) match {
-    case Left(l: StuartError) => // ... do something with StuartError 
-    case Right(r: JobValidated) => 
-      if(r.valid.getOrElse(false)){
-        // ... do stuff
-      }
-      else{
-        // ... do other stuff
-      }
-  }
+StuartApi().validateJob(request) match {
+  case Left(l: StuartError) => // ... do something with StuartError 
+  case Right(r: JobValidated) => 
+    if(r.valid.getOrElse(false)){
+      // ... do stuff
+    }
+    else{
+      // ... do other stuff
+    }
+}
 ```
 
 ### Create Job
 
 ```scala
-  StuartApi().createJob(request) match {
-    case Left(l: StuartError) => // ... do something with StuartError 
-    case Right(r: Job) => // ... do something with Job
-  }
+StuartApi().createJob(request) match {
+  case Left(l: StuartError) => // ... do something with StuartError 
+  case Right(r: Job) => // ... do something with Job
+}
 ```
 
 ### Load Job
 
 ```scala
-  StuartApi().loadJob(idJob) match {
-    case Left(l: StuartError) => // ... do something with StuartError 
-    case Right(r: Job) => // ... do something with Job
-  }
+StuartApi().loadJob(idJob) match {
+  case Left(l: StuartError) => // ... do something with StuartError 
+  case Right(r: Job) => // ... do something with Job
+}
 ```
 
 ### Cancel Job
 
 ```scala
-  StuartApi().cancelJob(idJob) match {
-    case Left(l: StuartError) => // ... do something with StuartError 
-    case Right(_) => // ... do something
-  }
+StuartApi().cancelJob(idJob) match {
+  case Left(l: StuartError) => // ... do something with StuartError 
+  case Right(_) => // ... do something
+}
 ```
