@@ -90,7 +90,7 @@ message Proof{
 }
 
 message Delivery {
-    required int64 id = 1;
+    required int32 id = 1;
     required DeliveryStatus status = 2;
     optional google.protobuf.Timestamp picked_at = 3 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "picked_at"];
     optional google.protobuf.Timestamp delivered_at = 4 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "delivered_at"];

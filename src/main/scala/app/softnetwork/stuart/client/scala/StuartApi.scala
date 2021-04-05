@@ -71,6 +71,14 @@ trait StuartJobApi {_: StuartApi =>
     )
   }
 
+  def updateJob(id: Int, job: JobPatch): Either[StuartError, Unit] = {
+    executeWithoutResponse[UpdateJob, StuartError](
+      s"/v2/jobs/$id",
+      UpdateJob(job),
+      HttpMethods.PATCH
+    )
+  }
+
   def listJobs(jobQuery: JobQuery): Either[StuartError, Seq[Job]] = {
     val query = jobQuery2Map(jobQuery)
     logger.debug(s"query -> $query")

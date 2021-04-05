@@ -19,6 +19,8 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
 
   var id: Int = _
 
+  var idDelivery: Int = _
+
   val client_reference = UUID.randomUUID().toString
 
   val pickups = List(
@@ -50,7 +52,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
       .withDropoffs(dropoffs)
 
   "StuartApi" must {
-    "validate address" in {
+    "Validate address" in {
       StuartApi().validateAddress("12 rue rivoli, 75001 Paris") match {
         case Left(l) => fail()
         case Right(r) => r.success shouldBe true
@@ -64,7 +66,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
         case Failure(f) => fail()
       }
     }
-    "calculate pricing" in {
+    "Request a job pricing" in {
       Try(StuartApi().calculatePricing(request)) match {
         case Success(s) => s match {
           case Left(l) => fail()
@@ -73,7 +75,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
         case Failure(f) => fail(f.getMessage)
       }
     }
-    "validate job" in {
+    "Validate job parameters" in {
       Try(StuartApi().validateJob(request)) match {
         case Success(s) => s match {
           case Left(l) => fail()
@@ -82,7 +84,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
         case Failure(f) => fail(f.getMessage)
       }
     }
-    "request job eta" in {
+    "Request a job ETA" in {
       Try(StuartApi().eta(request)) match {
         case Success(s) => s match {
           case Left(l) => fail()
@@ -93,17 +95,19 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
         case Failure(f) => fail(f.getMessage)
       }
     }
-    "create job" in {
+    "Create a job" in {
       Try(StuartApi().createJob(request)) match {
         case Success(s) =>
           s match {
             case Left(l) => fail()
-            case Right(r) => id = r.id
+            case Right(r) =>
+              id = r.id
+              idDelivery = r.deliveries.head.id
           }
         case Failure(f) => fail(f.getMessage)
       }
     }
-    "list jobs" in {
+    "Get a job listing" in {
       import JobStatus._
       val jobQuery = JobQuery.defaultInstance
         .withStatus(
@@ -116,12 +120,14 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
         case Success(s) =>
           s match {
             case Left(l) => fail()
-            case Right(r) => r.nonEmpty shouldBe true
+            case Right(r) =>
+              r.nonEmpty shouldBe true
+              r.exists(_.id == id) shouldBe true
           }
         case Failure(f) => fail(f.getMessage)
       }
     }
-    "load job" in {
+    "Get a job" in {
       Try(StuartApi().loadJob(id)) match {
         case Success(s) =>
           s match {
@@ -131,7 +137,44 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
         case Failure(f) => fail(f.getMessage)
       }
     }
-    "cancel job" in {
+    "Update a job" in {
+      val patch = JobPatch.defaultInstance.withDeliveries(
+        Seq(DeliveryPatch.defaultInstance
+          .withId(idDelivery.toString)
+          .withPackageDescription("description")
+        )
+      )
+      Try(StuartApi().updateJob(id, patch)) match {
+        case Success(s) =>
+          s match {
+            case Left(l) => fail()
+            case Right(_) =>
+              val jobQuery = JobQuery.defaultInstance
+                .withClientReference(client_reference)
+                .withActive(true)
+              Try(StuartApi().listJobs(jobQuery)) match {
+                case Success(s2) =>
+                  s2 match {
+                    case Left(l) => fail()
+                    case Right(r) =>
+                      r.nonEmpty shouldBe true
+                      r.find(_.id == id) match {
+                        case Some(j) =>
+                          j.deliveries.find(_.id == idDelivery) match {
+                            case Some(d) =>
+                              d.package_description shouldBe patch.deliveries.head.package_description
+                            case _ => fail()
+                          }
+                        case _ => fail()
+                      }
+                  }
+                case Failure(f) => fail(f.getMessage)
+              }
+          }
+        case Failure(f) => fail(f.getMessage)
+      }
+    }
+    "Cancel a job" in {
       Try(StuartApi().cancelJob(id)) match {
         case Success(s) =>
           s match {

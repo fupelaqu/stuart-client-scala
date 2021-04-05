@@ -105,3 +105,29 @@ message JobQuery{
     optional bool active = 5;
     optional JobListingOrder order = 6;
 }
+
+message PickupPatch{
+    optional string comment = 1;
+    optional ContactRequest contact = 2;
+}
+
+message DropOffPatch{
+    optional string comment = 1;
+    optional ContactRequest contact = 2;
+}
+
+message DeliveryPatch{
+    required string id = 1;
+    optional string client_reference = 2 [(scalapb.field).scala_name = "client_reference"];
+    optional string package_description = 3 [(scalapb.field).scala_name = "package_description"];
+    optional PickupPatch pickup = 4;
+    optional DropOffPatch dropoff = 5;
+}
+
+message JobPatch{
+    repeated DeliveryPatch deliveries = 1;
+}
+
+message UpdateJob{
+    required JobPatch job = 1;
+}
