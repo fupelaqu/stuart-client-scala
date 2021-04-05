@@ -1,5 +1,7 @@
 package app.softnetwork.stuart.client.scala
 
+import java.util.UUID
+
 import com.typesafe.scalalogging.StrictLogging
 
 import org.scalatest.matchers.should.Matchers
@@ -17,6 +19,8 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
 
   var id: Int = _
 
+  val client_reference = UUID.randomUUID().toString
+
   val pickups = List(
     Pickup.defaultInstance
       .withAddress("12 rue rivoli, 75001 Paris")
@@ -29,6 +33,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
   )
   val dropoffs = List(
     DropOff.defaultInstance
+      .withClientReference(client_reference)
       .withPackageType(PackageType.small)
       .withAddress("Les Arches d'Issy, 92130 Issy-Les-Moulineaux")
       .withContact(
@@ -98,6 +103,24 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
         case Failure(f) => fail(f.getMessage)
       }
     }
+    "list jobs" in {
+      import JobStatus._
+      val jobQuery = JobQuery.defaultInstance
+        .withStatus(
+          Seq(`new`, searching, in_progress)
+        )
+        .withPage(1)
+        .withPerPage(10)
+        .withClientReference(client_reference)
+      Try(StuartApi().listJobs(jobQuery)) match {
+        case Success(s) =>
+          s match {
+            case Left(l) => fail()
+            case Right(r) => r.nonEmpty shouldBe true
+          }
+        case Failure(f) => fail(f.getMessage)
+      }
+    }
     "load job" in {
       Try(StuartApi().loadJob(id)) match {
         case Success(s) =>
@@ -114,6 +137,22 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
           s match {
             case Left(l) => fail()
             case Right(_) =>
+              import JobStatus._
+              val jobQuery = JobQuery.defaultInstance
+                .withStatus(
+                  Seq(canceled)
+                )
+                .withClientReference(client_reference)
+              Try(StuartApi().listJobs(jobQuery)) match {
+                case Success(s2) =>
+                  s2 match {
+                    case Left(l) => fail()
+                    case Right(r) =>
+                      r.nonEmpty shouldBe true
+                      r.exists(_.id == id) shouldBe true
+                  }
+                case Failure(f) => fail(f.getMessage)
+              }
           }
         case Failure(f) => fail(f.getMessage)
       }

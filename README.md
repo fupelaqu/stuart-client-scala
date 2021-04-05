@@ -138,6 +138,25 @@ StuartApi().createJob(request) match {
 }
 ```
 
+### List Jobs
+
+```scala
+import JobStatus._
+
+val jobQuery = JobQuery.defaultInstance
+  .withStatus(
+    Seq(`new`, searching, in_progress)
+  )
+  .withPage(1)
+  .withPerPage(10)
+  .withClientReference("client reference")
+
+StuartApi().listJobs(jobQuery) match {
+  case Left(l: StuartError) => // ... do something with StuartError 
+  case Right(r: Seq[Job]) => // ... do something with Seq[Job]
+}
+```
+
 ### Load Job
 
 ```scala

@@ -90,3 +90,18 @@ message RequestJobEta{
 message JobEta{
     required int32 eta = 1;
 }
+
+enum JobListingOrder{
+    start_inviting_at_desc = 0;
+    pickup_at_desc = 1;
+    pickup_at_asc = 2;
+}
+
+message JobQuery{
+    repeated app.softnetwork.stuart.client.scala.model.JobStatus status = 1;
+    optional int32 page = 2;
+    optional int32 per_page = 3 [(scalapb.field).scala_name = "per_page"];
+    optional string client_reference = 4 [(scalapb.field).scala_name = "client_reference"];
+    optional bool active = 5;
+    optional JobListingOrder order = 6;
+}

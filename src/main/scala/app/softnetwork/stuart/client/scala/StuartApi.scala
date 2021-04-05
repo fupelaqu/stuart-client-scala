@@ -71,6 +71,12 @@ trait StuartJobApi {_: StuartApi =>
     )
   }
 
+  def listJobs(jobQuery: JobQuery): Either[StuartError, Seq[Job]] = {
+    val query = jobQuery2Map(jobQuery)
+    logger.debug(s"query -> $query")
+    doGet[Seq[Job], StuartError]("/v2/jobs", query)
+  }
+
   def loadJob(id: Int): Either[StuartError, Job] = {
     doGet[Job, StuartError](s"/v2/jobs/$id")
   }
@@ -80,6 +86,36 @@ trait StuartJobApi {_: StuartApi =>
       s"/v2/jobs/$id/cancel",
       HttpMethods.POST
     )
+  }
+
+  private[this] def jobQuery2Map(jobQuery: JobQuery): Map[String, String] = {
+    import jobQuery._
+    Map.empty ++ (status.toList match {
+      case Nil => Map.empty
+      case _ => Map("status" -> status.mkString(","))
+    }) ++ (page match {
+      case Some(p) => Map("page" -> p.toString)
+      case None => Map.empty
+    }) ++ (per_page match {
+      case Some(pp) => Map("per_page" -> pp.toString)
+      case None => Map.empty
+    }) ++ (client_reference match {
+      case Some(c) => Map("client_reference" -> c)
+      case None => Map.empty
+    }) ++ (active match {
+      case Some(a) => Map("active" -> a.toString)
+      case None => Map.empty
+    }) ++ (order match {
+      case Some(o) =>
+        import JobListingOrder._
+        Map("order" -> (o match {
+          case _: start_inviting_at_desc.type => "start_inviting_at:desc"
+          case _: pickup_at_desc.type => "pickup_at:desc"
+          case _: pickup_at_asc.type => "pickup_at:asc"
+          case _ => ""
+        }))
+      case None => Map.empty
+    })
   }
 }
 
