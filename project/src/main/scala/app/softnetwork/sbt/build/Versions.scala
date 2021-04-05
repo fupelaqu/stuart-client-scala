@@ -6,4 +6,8 @@ object Versions {
 
   val kxbmap = "0.4.4"
 
+  val scalatest = "3.1.1"
+
+  val scalacheck = "1.13.4"
+
 }

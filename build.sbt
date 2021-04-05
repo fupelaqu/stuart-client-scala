@@ -52,6 +52,11 @@ val typesafeConfig = Seq(
   "com.github.kxbmap" %% "configs" % Versions.kxbmap excludeAll ExclusionRule(organization="com.typesafe", name="config")
 )
 
+val scalatest = Seq(
+  "org.scalatest"  %% "scalatest"  % Versions.scalatest  % Test,
+  "org.scalacheck" %% "scalacheck" % Versions.scalacheck % Test
+)
+
 libraryDependencies ++=
   Seq(
     "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
@@ -59,7 +64,8 @@ libraryDependencies ++=
     "app.softnetwork.api" %% "generic-client-api" % "0.1.2",
     "org.apache.commons" % "commons-lang3" % "3.12.0"
   ) ++
-  typesafeConfig
+  typesafeConfig ++
+  scalatest
 
 lazy val root = project.in(file("."))
   .configs(IntegrationTest)
