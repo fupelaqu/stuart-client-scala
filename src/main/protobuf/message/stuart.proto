@@ -82,3 +82,11 @@ message JobValidated{
 message CreateJob{
     required JobRequest job = 1;
 }
+
+message RequestJobEta{
+    required JobRequest job = 1;
+}
+
+message JobEta{
+    required int32 eta = 1;
+}

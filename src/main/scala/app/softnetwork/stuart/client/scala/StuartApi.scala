@@ -57,6 +57,13 @@ trait StuartJobApi {_: StuartApi =>
     )
   }
 
+  def eta(job: JobRequest): Either[StuartError, JobEta] = {
+    doPost[RequestJobEta, JobEta, StuartError](
+      "/v2/jobs/eta",
+      RequestJobEta(job)
+    )
+  }
+
   def createJob(job: JobRequest): Either[StuartError, Job] = {
     doPost[CreateJob, Job, StuartError](
       "/v2/jobs",

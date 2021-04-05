@@ -77,6 +77,17 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
         case Failure(f) => fail(f.getMessage)
       }
     }
+    "request job eta" in {
+      Try(StuartApi().eta(request)) match {
+        case Success(s) => s match {
+          case Left(l) => fail()
+          case Right(r) => 
+            logger.info(s"$r")
+            r.eta >= 0 shouldBe true
+        }
+        case Failure(f) => fail(f.getMessage)
+      }
+    }
     "create job" in {
       Try(StuartApi().createJob(request)) match {
         case Success(s) =>

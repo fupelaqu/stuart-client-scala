@@ -120,6 +120,15 @@ StuartApi().validateJob(request) match {
 }
 ```
 
+### Request Job Eta
+
+```scala
+StuartApi().eta(request) match {
+  case Left(l: StuartError) => // ... do something with StuartError 
+  case Right(r: JobEta) => // ... eg JobEta(eta = 54)
+}
+```
+
 ### Create Job
 
 ```scala
