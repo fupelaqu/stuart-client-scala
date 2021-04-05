@@ -169,6 +169,22 @@ StuartApi().loadJob(idJob) match {
 }
 ```
 
+### Update a job
+
+```scala
+val patch = JobPatch.defaultInstance.withDeliveries(
+  Seq(DeliveryPatch.defaultInstance
+    .withId(idDelivery)
+    .withPackageDescription("description")
+  )
+)
+
+StuartApi().updateJob(idJob, patch) match {
+  case Left(l: StuartError) => // ... do something with StuartError 
+  case Right(_) => 
+}
+```
+
 ### Cancel a job
 
 ```scala
