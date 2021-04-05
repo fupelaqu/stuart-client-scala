@@ -163,7 +163,7 @@ StuartApi().listJobs(jobQuery) match {
 ### Get a job
 
 ```scala
-StuartApi().loadJob(idJob) match {
+StuartApi().loadJob(job_id) match {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(r: Job) => // ... do something with Job
 }
@@ -179,16 +179,25 @@ val patch = JobPatch.defaultInstance.withDeliveries(
   )
 )
 
-StuartApi().updateJob(idJob, patch) match {
+StuartApi().updateJob(job_id, patch) match {
   case Left(l: StuartError) => // ... do something with StuartError 
-  case Right(_) => 
+  case Right(_) => // ... do something
 }
 ```
 
 ### Cancel a job
 
 ```scala
-StuartApi().cancelJob(idJob) match {
+StuartApi().cancelJob(job_id) match {
+  case Left(l: StuartError) => // ... do something with StuartError 
+  case Right(_) => // ... do something
+}
+```
+
+### Cancel a delivery
+
+```scala
+StuartApi().cancelDelivery(delivery_id) match {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(_) => // ... do something
 }

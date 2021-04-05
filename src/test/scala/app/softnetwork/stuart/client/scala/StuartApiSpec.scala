@@ -17,9 +17,9 @@ import scala.util.{Success, Failure, Try}
   */
 class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
 
-  var id: Int = _
+  var job_id: Int = _
 
-  var idDelivery: Int = _
+  var delivery_id: Int = _
 
   val client_reference = UUID.randomUUID().toString
 
@@ -101,8 +101,8 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
           s match {
             case Left(l) => fail()
             case Right(r) =>
-              id = r.id
-              idDelivery = r.deliveries.head.id
+              job_id = r.id
+              delivery_id = r.deliveries.head.id
           }
         case Failure(f) => fail(f.getMessage)
       }
@@ -122,13 +122,13 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
             case Left(l) => fail()
             case Right(r) =>
               r.nonEmpty shouldBe true
-              r.exists(_.id == id) shouldBe true
+              r.exists(_.id == job_id) shouldBe true
           }
         case Failure(f) => fail(f.getMessage)
       }
     }
     "Get a job" in {
-      Try(StuartApi().loadJob(id)) match {
+      Try(StuartApi().loadJob(job_id)) match {
         case Success(s) =>
           s match {
             case Left(l) => fail()
@@ -140,11 +140,11 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
     "Update a job" in {
       val patch = JobPatch.defaultInstance.withDeliveries(
         Seq(DeliveryPatch.defaultInstance
-          .withId(idDelivery.toString)
+          .withId(delivery_id.toString)
           .withPackageDescription("description")
         )
       )
-      Try(StuartApi().updateJob(id, patch)) match {
+      Try(StuartApi().updateJob(job_id, patch)) match {
         case Success(s) =>
           s match {
             case Left(l) => fail()
@@ -158,9 +158,9 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
                     case Left(l) => fail()
                     case Right(r) =>
                       r.nonEmpty shouldBe true
-                      r.find(_.id == id) match {
+                      r.find(_.id == job_id) match {
                         case Some(j) =>
-                          j.deliveries.find(_.id == idDelivery) match {
+                          j.deliveries.find(_.id == delivery_id) match {
                             case Some(d) =>
                               d.package_description shouldBe patch.deliveries.head.package_description
                             case _ => fail()
@@ -175,7 +175,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
       }
     }
     "Cancel a job" in {
-      Try(StuartApi().cancelJob(id)) match {
+      Try(StuartApi().cancelJob(job_id)) match {
         case Success(s) =>
           s match {
             case Left(l) => fail()
@@ -192,7 +192,33 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
                     case Left(l) => fail()
                     case Right(r) =>
                       r.nonEmpty shouldBe true
-                      r.exists(_.id == id) shouldBe true
+                      r.find(_.id == job_id) match {
+                        case Some(j) => j.status match {
+                          case _: canceled.type =>
+                          case _ => fail()
+                        }
+                        case _ => fail()
+                      }
+                  }
+                case Failure(f) => fail(f.getMessage)
+              }
+          }
+        case Failure(f) => fail(f.getMessage)
+      }
+    }
+    "Cancel a delivery" in {
+      Try(StuartApi().createJob(request)) match {
+        case Success(s) =>
+          s match {
+            case Left(l) => fail()
+            case Right(r) =>
+              Try(StuartApi().cancelDelivery(r.deliveries.head.id)) match {
+                case Success(s) =>
+                  s match {
+                    case Left(l) =>
+                      logger.error(s"$l")
+                      fail()
+                    case Right(_) =>
                   }
                 case Failure(f) => fail(f.getMessage)
               }

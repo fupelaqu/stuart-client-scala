@@ -71,9 +71,9 @@ trait StuartJobApi {_: StuartApi =>
     )
   }
 
-  def updateJob(id: Int, job: JobPatch): Either[StuartError, Unit] = {
+  def updateJob(job_id: Int, job: JobPatch): Either[StuartError, Unit] = {
     executeWithoutResponse[UpdateJob, StuartError](
-      s"/v2/jobs/$id",
+      s"/v2/jobs/$job_id",
       UpdateJob(job),
       HttpMethods.PATCH
     )
@@ -85,13 +85,20 @@ trait StuartJobApi {_: StuartApi =>
     doGet[Seq[Job], StuartError]("/v2/jobs", query)
   }
 
-  def loadJob(id: Int): Either[StuartError, Job] = {
-    doGet[Job, StuartError](s"/v2/jobs/$id")
+  def loadJob(job_id: Int): Either[StuartError, Job] = {
+    doGet[Job, StuartError](s"/v2/jobs/$job_id")
   }
 
-  def cancelJob(id: Int): Either[StuartError, Unit] = {
+  def cancelJob(job_id: Int): Either[StuartError, Unit] = {
     executeWithoutRequestAndResponse[StuartError](
-      s"/v2/jobs/$id/cancel",
+      s"/v2/jobs/$job_id/cancel",
+      HttpMethods.POST
+    )
+  }
+
+  def cancelDelivery(delivery_id: Int): Either[StuartError, Unit] = {
+    executeWithoutRequestAndResponse[StuartError](
+      s"/v2/deliveries/$delivery_id/cancel",
       HttpMethods.POST
     )
   }
