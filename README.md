@@ -9,7 +9,7 @@ For a complete documentation of all endpoints offered by the Stuart API, you can
 ```scala
 resolvers += "Artifactory" at "https://softnetwork.jfrog.io/artifactory/releases/"
 
-libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.1.0"
+libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.1.1"
 ```
 
 ## Configuration
