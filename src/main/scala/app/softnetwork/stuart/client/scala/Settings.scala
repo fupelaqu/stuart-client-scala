@@ -15,7 +15,7 @@ object Settings extends StrictLogging {
     case Left(configError)  =>
       logger.error(s"Something went wrong with the provided arguments $configError")
       throw configError.configException
-    case Right(mangoPayConfig) => mangoPayConfig
+    case Right(stuartConfig) => stuartConfig
   }
 
 }
