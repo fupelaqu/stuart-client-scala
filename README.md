@@ -180,9 +180,18 @@ StuartApi().listJobs(jobQuery) match {
 ### Get a job
 
 ```scala
-StuartApi().loadJob(job_id) match {
+StuartApi().getJob(job_id) match {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(r: Job) => // ... do something with Job
+}
+```
+
+### Get driver's anonymous phone number
+
+```scala
+StuartApi().getDriverPhoneNumber(delivery_id) match {
+  case Left(l: StuartError) => // ... do something with StuartError 
+  case Right(r: DriverPhoneNumber) => // ... do something with DriverPhoneNumber
 }
 ```
 

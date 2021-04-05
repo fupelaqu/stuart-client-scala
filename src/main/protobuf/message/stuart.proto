@@ -131,3 +131,7 @@ message JobPatch{
 message UpdateJob{
     required JobPatch job = 1;
 }
+
+message DriverPhoneNumber{
+    optional string phone_number = 1 [(scalapb.field).scala_name = "phone_number"];
+}

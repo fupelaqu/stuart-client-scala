@@ -134,10 +134,22 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
       }
     }
     "Get a job" in {
-      Try(StuartApi().loadJob(job_id)) match {
+      Try(StuartApi().getJob(job_id)) match {
         case Success(s) =>
           s match {
             case Left(l) => fail()
+            case Right(r) => logger.info(s"$r")
+          }
+        case Failure(f) => fail(f.getMessage)
+      }
+    }
+    "Get driver's anonymous phone number" in {
+      Try(StuartApi().getDriverPhoneNumber(delivery_id)) match {
+        case Success(s) =>
+          s match {
+            case Left(l) =>
+              logger.error(s"$l")
+              l.error == "NO_CURRENT_DELIVERY" shouldBe true
             case Right(r) => logger.info(s"$r")
           }
         case Failure(f) => fail(f.getMessage)
@@ -219,8 +231,8 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
             case Left(l) => fail()
             case Right(r) =>
               Try(StuartApi().cancelDelivery(r.deliveries.head.id)) match {
-                case Success(s) =>
-                  s match {
+                case Success(s2) =>
+                  s2 match {
                     case Left(l) =>
                       logger.error(s"$l")
                       fail()

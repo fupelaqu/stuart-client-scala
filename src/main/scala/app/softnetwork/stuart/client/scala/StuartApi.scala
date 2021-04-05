@@ -46,9 +46,7 @@ trait StuartAddressApi {_: StuartApi =>
   }
 
   def checkZone(country: String = "france", town: String): Boolean = {
-    val zone = StringUtils.stripAccents(town).replace(' ', '_').replace('-', '_').toLowerCase()
-    logger.info(s"$town -> $zone")
-    config.zones(country).contains(zone)
+    config.zones(country).contains(StringUtils.stripAccents(town).replace(' ', '_').replace('-', '_').toLowerCase())
   }
 }
 
@@ -96,8 +94,12 @@ trait StuartJobApi {_: StuartApi =>
     doGet[Seq[Job], StuartError]("/v2/jobs", query)
   }
 
-  def loadJob(job_id: Int): Either[StuartError, Job] = {
+  def getJob(job_id: Int): Either[StuartError, Job] = {
     doGet[Job, StuartError](s"/v2/jobs/$job_id")
+  }
+
+  def getDriverPhoneNumber(delivery_id: Int): Either[StuartError, DriverPhoneNumber] = {
+    executeWithoutRequest[DriverPhoneNumber, StuartError](s"/v2/deliveries/$delivery_id/phone_number")
   }
 
   def cancelJob(job_id: Int): Either[StuartError, Unit] = {
