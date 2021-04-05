@@ -49,7 +49,7 @@ message StuartError{
 }
 ```
 
-### Validate Address
+### Validate address
 
 ```scala
 import app.softnetwork.stuart.client.scala._
@@ -68,7 +68,7 @@ StuartApi().validateAddress("12 rue rivoli, 75001 Paris") match {
 }
 ```
 
-### Calculate Pricing
+### Request a job Pricing
 
 ```scala
 
@@ -105,7 +105,7 @@ StuartApi().calculatePricing(request) match {
 }
 ```
 
-### Validate Job
+### Validate job parameters
 
 ```scala
 StuartApi().validateJob(request) match {
@@ -120,7 +120,7 @@ StuartApi().validateJob(request) match {
 }
 ```
 
-### Request Job Eta
+### Request a job ETA
 
 ```scala
 StuartApi().eta(request) match {
@@ -129,7 +129,7 @@ StuartApi().eta(request) match {
 }
 ```
 
-### Create Job
+### Create a job
 
 ```scala
 StuartApi().createJob(request) match {
@@ -138,7 +138,7 @@ StuartApi().createJob(request) match {
 }
 ```
 
-### List Jobs
+### Get a job listing
 
 ```scala
 import JobStatus._
@@ -157,7 +157,7 @@ StuartApi().listJobs(jobQuery) match {
 }
 ```
 
-### Load Job
+### Get a job
 
 ```scala
 StuartApi().loadJob(idJob) match {
@@ -166,7 +166,7 @@ StuartApi().loadJob(idJob) match {
 }
 ```
 
-### Cancel Job
+### Cancel a job
 
 ```scala
 StuartApi().cancelJob(idJob) match {
