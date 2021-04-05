@@ -5,6 +5,7 @@ import akka.http.scaladsl.model.HttpMethods
 
 import akka.stream.Materializer
 import app.softnetwork.api.client.auth.{Oauth2ApiConfig, Oauth2Authenticator}
+import org.apache.commons.lang3.StringUtils
 
 import org.json4s.Formats
 
@@ -21,6 +22,7 @@ import scala.language.implicitConversions
   */
 sealed trait StuartApi extends GenericApi with Oauth2Authenticator with StuartAddressApi with StuartJobApi{
   override implicit def formats: Formats = stuartFormats
+  override lazy val config = Settings.StuartConfig
 }
 
 trait StuartAddressApi {_: StuartApi =>
@@ -39,6 +41,15 @@ trait StuartAddressApi {_: StuartApi =>
     )
   }
 
+  def listZonesPerCountry(country: String): Seq[String] = {
+    config.zones(country)
+  }
+
+  def checkZone(country: String = "france", town: String): Boolean = {
+    val zone = StringUtils.stripAccents(town).replace(' ', '_').replace('-', '_').toLowerCase()
+    logger.info(s"$town -> $zone")
+    config.zones(country).contains(zone)
+  }
 }
 
 trait StuartJobApi {_: StuartApi =>
@@ -146,15 +157,17 @@ object StuartApi {
           implicit val system = sys
           implicit val ec = system.dispatcher
           implicit val mat = Materializer(system)
-          override lazy val config = Settings.StuartConfig
         }
         instance = Some(api)
         api
     }
   }
 
-  case class Config(dryRun: Boolean, apiClientId: String, apiSecret: String, oauth2Api: String = "/oauth/token")
-    extends Oauth2ApiConfig {
+  case class StuartConfig(dryRun: Boolean,
+                          apiClientId: String,
+                          apiSecret: String,
+                          oauth2Api: String = "/oauth/token",
+                          zones: Map[String, Seq[String]]) extends Oauth2ApiConfig {
     lazy val baseUrl = {
       if(dryRun){
         "https://api.sandbox.stuart.com"

@@ -99,8 +99,9 @@ val scalatest = Seq(
 libraryDependencies in ThisBuild ++=
   Seq(
     "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
-    "app.softnetwork.protobuf" %% "scalapb-extensions" % "0.1-SNAPSHOT",
-    "app.softnetwork.api" %% "generic-client-api" % "0.1-SNAPSHOT"
+    "app.softnetwork.protobuf" %% "scalapb-extensions" % "0.1.0",
+    "app.softnetwork.api" %% "generic-client-api" % "0.1.1",
+    "org.apache.commons" % "commons-lang3" % "3.12.0"
   ) ++
   akkaHttp ++
   json4s ++

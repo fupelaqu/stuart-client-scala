@@ -66,6 +66,12 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
         case Failure(f) => fail()
       }
     }
+    "List zones per country" in {
+      StuartApi().listZonesPerCountry("france").contains("paris") shouldBe true
+    }
+    "Check if a zone exists" in {
+      StuartApi().checkZone("france", "Charleville-Mézières") shouldBe true
+    }
     "Request a job pricing" in {
       Try(StuartApi().calculatePricing(request)) match {
         case Success(s) => s match {

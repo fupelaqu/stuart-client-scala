@@ -11,7 +11,7 @@ object Settings extends StrictLogging {
 
   lazy val config: Config = ConfigFactory.load()
 
-  lazy val StuartConfig: StuartApi.Config = Configs[StuartApi.Config].get(config, "stuart").toEither match{
+  lazy val StuartConfig: StuartApi.StuartConfig = Configs[StuartApi.StuartConfig].get(config, "stuart").toEither match{
     case Left(configError)  =>
       logger.error(s"Something went wrong with the provided arguments $configError")
       throw configError.configException
