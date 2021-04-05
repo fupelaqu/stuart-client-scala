@@ -68,6 +68,23 @@ StuartApi().validateAddress("12 rue rivoli, 75001 Paris") match {
 }
 ```
 
+### List zones per country
+
+```scala
+val zones = StuartApi().listZonesPerCountry("france")
+```
+
+### Check if a zone exists
+
+```scala
+if(StuartApi().checkZone("france", "Charleville-Mézières")){
+  // ... do stuff
+}
+else{
+  // ... do other stuff
+}
+```
+
 ### Request a job Pricing
 
 ```scala
