@@ -72,6 +72,8 @@ StuartApi().validateAddress("12 rue rivoli, 75001 Paris") match {
 
 ```scala
 
+val client_reference = "client reference"
+
 val pickups = List(
   Pickup.defaultInstance
     .withAddress("12 rue rivoli, 75001 Paris")
@@ -84,6 +86,7 @@ val pickups = List(
 )
 val dropoffs = List(
   DropOff.defaultInstance
+    .withClientReference(client_reference)
     .withPackageType(PackageType.small)
     .withAddress("Les Arches d'Issy, 92130 Issy-Les-Moulineaux")
     .withContact(
