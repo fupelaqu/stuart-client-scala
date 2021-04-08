@@ -116,9 +116,9 @@ val request =
     .withPickups(pickups)
     .withDropoffs(dropoffs)
 
-StuartApi().calculatePricing(request) match {
+StuartApi().calculateShipping(request) match {
   case Left(l: StuartError) => // ... do something with StuartError 
-  case Right(r: PricingCalculated) => // eg PricingCalculated(amount = 17, currency = EUR)
+  case Right(r: ShippingCalculated) => // eg ShippingCalculated(amount = 17, currency = EUR)
 }
 ```
 

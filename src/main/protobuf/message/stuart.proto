@@ -62,11 +62,11 @@ message JobRequest{
     repeated int32 fleets = 7;
 }
 
-message CalculatePricing{
+message CalculateShipping{
     required JobRequest job = 1;
 }
 
-message PricingCalculated{
+message ShippingCalculated{
     required int64 amount = 1; // VAT excluded
     required string currency = 2;
 }

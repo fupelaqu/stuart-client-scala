@@ -52,10 +52,10 @@ trait StuartAddressApi {_: StuartApi =>
 
 trait StuartJobApi {_: StuartApi =>
 
-  def calculatePricing(job: JobRequest): Either[StuartError, PricingCalculated] = {
-    doPost[CalculatePricing, PricingCalculated, StuartError](
+  def calculateShipping(job: JobRequest): Either[StuartError, ShippingCalculated] = {
+    doPost[CalculateShipping, ShippingCalculated, StuartError](
       "/v2/jobs/pricing",
-      CalculatePricing(job)
+      CalculateShipping(job)
     )
   }
 
