@@ -1,5 +1,6 @@
 package app.softnetwork.stuart.client.scala
 
+import java.time.ZonedDateTime
 import java.util.UUID
 
 import com.typesafe.scalalogging.StrictLogging
@@ -48,6 +49,8 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
   val request =
     JobRequest.defaultInstance
       .withTransportType(TransportType.bike)
+      // can not schedule a dropoff in less than 60 minutes from now
+      .withDropoffAt(ZonedDateTime.now().plusHours(1).plusMinutes(1))
       .withPickups(pickups)
       .withDropoffs(dropoffs)
 
@@ -75,7 +78,9 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
     "Request a job pricing" in {
       Try(StuartApi().calculateShipping(request)) match {
         case Success(s) => s match {
-          case Left(l) => fail()
+          case Left(l) => 
+            logger.error(s"$l")
+            fail(l.message)
           case Right(r) => logger.info(s"$r")
         }
         case Failure(f) => fail(f.getMessage)
@@ -84,7 +89,9 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
     "Validate job parameters" in {
       Try(StuartApi().validateJob(request)) match {
         case Success(s) => s match {
-          case Left(l) => fail()
+          case Left(l) => 
+            logger.error(s"$l")
+            fail(l.message)
           case Right(r) => r.valid.getOrElse(false) shouldBe true
         }
         case Failure(f) => fail(f.getMessage)
@@ -93,7 +100,9 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
     "Request a job ETA" in {
       Try(StuartApi().eta(request)) match {
         case Success(s) => s match {
-          case Left(l) => fail()
+          case Left(l) => 
+            logger.error(s"$l")
+            fail(l.message)
           case Right(r) => 
             logger.info(s"$r")
             r.eta >= 0 shouldBe true
@@ -105,7 +114,9 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
       Try(StuartApi().createJob(request)) match {
         case Success(s) =>
           s match {
-            case Left(l) => fail()
+            case Left(l) => 
+              logger.error(s"$l")
+              fail(l.message)
             case Right(r) =>
               job_id = r.id
               delivery_id = r.deliveries.head.id
@@ -117,7 +128,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
       import JobStatus._
       val jobQuery = JobQuery.defaultInstance
         .withStatus(
-          Seq(`new`, searching, in_progress)
+          Seq(`new`, searching, in_progress, scheduled)
         )
         .withPage(1)
         .withPerPage(10)
@@ -125,7 +136,9 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
       Try(StuartApi().listJobs(jobQuery)) match {
         case Success(s) =>
           s match {
-            case Left(l) => fail()
+            case Left(l) => 
+              logger.error(s"$l")
+              fail(l.message)
             case Right(r) =>
               r.nonEmpty shouldBe true
               r.exists(_.id == job_id) shouldBe true
@@ -137,7 +150,9 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
       Try(StuartApi().getJob(job_id)) match {
         case Success(s) =>
           s match {
-            case Left(l) => fail()
+            case Left(l) => 
+              logger.error(s"$l")
+              fail(l.message)
             case Right(r) => logger.info(s"$r")
           }
         case Failure(f) => fail(f.getMessage)
@@ -165,15 +180,22 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
       Try(StuartApi().updateJob(job_id, patch)) match {
         case Success(s) =>
           s match {
-            case Left(l) => fail()
+            case Left(l) => 
+              logger.error(s"$l")
+              fail(l.message)
             case Right(_) =>
+              import JobStatus._
               val jobQuery = JobQuery.defaultInstance
                 .withClientReference(client_reference)
-                .withActive(true)
+                .withStatus(
+                  Seq(`new`, searching, in_progress, scheduled)
+                )
               Try(StuartApi().listJobs(jobQuery)) match {
                 case Success(s2) =>
                   s2 match {
-                    case Left(l) => fail()
+                    case Left(l) => 
+                      logger.error(s"$l")
+                      fail(l.message)
                     case Right(r) =>
                       r.nonEmpty shouldBe true
                       r.find(_.id == job_id) match {
@@ -196,7 +218,9 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
       Try(StuartApi().cancelJob(job_id)) match {
         case Success(s) =>
           s match {
-            case Left(l) => fail()
+            case Left(l) => 
+              logger.error(s"$l")
+              fail(l.message)
             case Right(_) =>
               import JobStatus._
               val jobQuery = JobQuery.defaultInstance
@@ -207,7 +231,9 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
               Try(StuartApi().listJobs(jobQuery)) match {
                 case Success(s2) =>
                   s2 match {
-                    case Left(l) => fail()
+                    case Left(l) => 
+                      logger.error(s"$l")
+                      fail(l.message)
                     case Right(r) =>
                       r.nonEmpty shouldBe true
                       r.find(_.id == job_id) match {
@@ -228,7 +254,9 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
       Try(StuartApi().createJob(request)) match {
         case Success(s) =>
           s match {
-            case Left(l) => fail()
+            case Left(l) => 
+              logger.error(s"$l")
+              fail(l.message)
             case Right(r) =>
               Try(StuartApi().cancelDelivery(r.deliveries.head.id)) match {
                 case Success(s2) =>

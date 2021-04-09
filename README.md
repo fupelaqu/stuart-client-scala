@@ -9,7 +9,7 @@ For a complete documentation of all endpoints offered by the Stuart API, you can
 ```scala
 resolvers += "Artifactory" at "https://softnetwork.jfrog.io/artifactory/releases/"
 
-libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.1.1"
+libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.1.2"
 ```
 
 ## Configuration
@@ -113,6 +113,8 @@ val dropoffs = List(
 val request =
   JobRequest.defaultInstance
     .withTransportType(TransportType.bike)
+    // can not schedule a dropoff in less than 60 minutes from now
+    .withDropoffAt(ZonedDateTime.now().plusHours(1).plusMinutes(1))
     .withPickups(pickups)
     .withDropoffs(dropoffs)
 

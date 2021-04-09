@@ -92,8 +92,8 @@ message Proof{
 message Delivery {
     required int32 id = 1;
     required DeliveryStatus status = 2;
-    optional google.protobuf.Timestamp picked_at = 3 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "picked_at"];
-    optional google.protobuf.Timestamp delivered_at = 4 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "delivered_at"];
+    optional google.protobuf.Timestamp picked_at = 3 [(scalapb.field).type = "java.time.ZonedDateTime", (scalapb.field).scala_name = "picked_at"];
+    optional google.protobuf.Timestamp delivered_at = 4 [(scalapb.field).type = "java.time.ZonedDateTime", (scalapb.field).scala_name = "delivered_at"];
     required string tracking_url = 5 [(scalapb.field).scala_name = "tracking_url"];
     optional string client_reference = 6 [(scalapb.field).scala_name = "client_reference"];
     optional string package_description = 7 [(scalapb.field).scala_name = "package_description"];
@@ -130,8 +130,8 @@ message Job{
     optional PackageType package_type = 3 [(scalapb.field).scala_name = "package_type"];
     optional TransportType transport_type = 4 [(scalapb.field).scala_name = "transport_type"];
     optional string assignment_code = 5 [(scalapb.field).scala_name = "assignment_code"];
-    optional google.protobuf.Timestamp pickup_at = 6 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "pickup_at"];
-    optional google.protobuf.Timestamp dropoff_at = 7 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "dropoff_at"];
+    optional google.protobuf.Timestamp pickup_at = 6 [(scalapb.field).type = "java.time.ZonedDateTime", (scalapb.field).scala_name = "pickup_at"];
+    optional google.protobuf.Timestamp dropoff_at = 7 [(scalapb.field).type = "java.time.ZonedDateTime", (scalapb.field).scala_name = "dropoff_at"];
     optional string comment = 8;
     required double distance = 9;
     required int32 duration = 10;

@@ -60,7 +60,7 @@ val scalatest = Seq(
 libraryDependencies ++=
   Seq(
     "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
-    "app.softnetwork.protobuf" %% "scalapb-extensions" % "0.1.1",
+    "app.softnetwork.protobuf" %% "scalapb-extensions" % "0.1.2",
     "app.softnetwork.api" %% "generic-client-api" % "0.1.2",
     "org.apache.commons" % "commons-lang3" % "3.12.0"
   ) ++

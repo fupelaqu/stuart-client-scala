@@ -48,13 +48,13 @@ message DropOff{
     required string address = 4;
     optional string comment = 5;
     optional ContactRequest contact = 6;
-    optional google.protobuf.Timestamp end_customer_time_window_start = 7 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "end_customer_time_window_start"];
-    optional google.protobuf.Timestamp end_customer_time_window_end = 8 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "end_customer_time_window_end"];
+    optional google.protobuf.Timestamp end_customer_time_window_start = 7 [(scalapb.field).type = "java.time.ZonedDateTime", (scalapb.field).scala_name = "end_customer_time_window_start"];
+    optional google.protobuf.Timestamp end_customer_time_window_end = 8 [(scalapb.field).type = "java.time.ZonedDateTime", (scalapb.field).scala_name = "end_customer_time_window_end"];
 }
 
 message JobRequest{
-    optional google.protobuf.Timestamp pickup_at = 1 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "pickup_at"];
-    optional google.protobuf.Timestamp dropoff_at = 2 [(scalapb.field).type = "java.time.Instant", (scalapb.field).scala_name = "dropoff_at"];
+    optional google.protobuf.Timestamp pickup_at = 1 [(scalapb.field).type = "java.time.ZonedDateTime", (scalapb.field).scala_name = "pickup_at"];
+    optional google.protobuf.Timestamp dropoff_at = 2 [(scalapb.field).type = "java.time.ZonedDateTime", (scalapb.field).scala_name = "dropoff_at"];
     optional string assignment_code = 3;
     optional app.softnetwork.stuart.client.scala.model.TransportType transport_type = 4;
     repeated Pickup pickups = 5;
