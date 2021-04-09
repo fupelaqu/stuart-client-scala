@@ -67,7 +67,7 @@ message CalculateShipping{
 }
 
 message ShippingCalculated{
-    required int64 amount = 1; // VAT excluded
+    required double amount = 1; // VAT excluded
     required string currency = 2;
 }
 

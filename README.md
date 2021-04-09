@@ -9,7 +9,7 @@ For a complete documentation of all endpoints offered by the Stuart API, you can
 ```scala
 resolvers += "Artifactory" at "https://softnetwork.jfrog.io/artifactory/releases/"
 
-libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.1.2"
+libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.1.3"
 ```
 
 ## Configuration
@@ -22,6 +22,8 @@ stuart{
   api-client-id = ""
   # stuart api secret
   api-secret = ""
+  # stuart tax - default 20
+  tax = 20
 }
 ```
 
@@ -118,9 +120,9 @@ val request =
     .withPickups(pickups)
     .withDropoffs(dropoffs)
 
-StuartApi().calculateShipping(request) match {
+StuartApi().calculatePricing(request) match {
   case Left(l: StuartError) => // ... do something with StuartError 
-  case Right(r: ShippingCalculated) => // eg ShippingCalculated(amount = 17, currency = EUR)
+  case Right(r: Pricing) => // eg Pricing(currency = EUR, tax_percentage = 0.2, price_tax_included = 21.34, price_tax_excluded = 17.78, tax_amount = 3.56)
 }
 ```
 

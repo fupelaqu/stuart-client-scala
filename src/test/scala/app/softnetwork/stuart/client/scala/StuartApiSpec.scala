@@ -76,7 +76,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
       StuartApi().checkZone("france", "Charleville-Mézières") shouldBe true
     }
     "Request a job pricing" in {
-      Try(StuartApi().calculateShipping(request)) match {
+      Try(StuartApi().calculatePricing(request)) match {
         case Success(s) => s match {
           case Left(l) => 
             logger.error(s"$l")

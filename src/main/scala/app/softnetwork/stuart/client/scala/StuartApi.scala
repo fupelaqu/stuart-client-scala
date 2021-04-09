@@ -52,11 +52,26 @@ trait StuartAddressApi {_: StuartApi =>
 
 trait StuartJobApi {_: StuartApi =>
 
-  def calculateShipping(job: JobRequest): Either[StuartError, ShippingCalculated] = {
+  def calculatePricing(job: JobRequest): Either[StuartError, Pricing] = {
     doPost[CalculateShipping, ShippingCalculated, StuartError](
       "/v2/jobs/pricing",
       CalculateShipping(job)
-    )
+    )match {
+      case Right(shipping) =>
+        val currency = shipping.currency
+        val amount: Double = shipping.amount
+        val taxPercentage: Double = config.tax.toDouble / 100
+        val taxAmount: Double = BigDecimal((amount * config.tax) / 100).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
+        Right(
+          Pricing.defaultInstance
+            .withCurrency(currency)
+            .withTaxPercentage(taxPercentage)
+            .withPriceTaxIncluded(amount + taxAmount)
+            .withPriceTaxExcluded(amount)
+            .withTaxAmount(taxAmount)
+        )
+      case Left(l) => Left(l)
+    }
   }
 
   def validateJob(job: JobRequest): Either[StuartError, JobValidated] = {
@@ -169,7 +184,8 @@ object StuartApi {
                           apiClientId: String,
                           apiSecret: String,
                           oauth2Api: String = "/oauth/token",
-                          zones: Map[String, Seq[String]]) extends Oauth2ApiConfig {
+                          zones: Map[String, Seq[String]],
+                          tax: Int = 20) extends Oauth2ApiConfig {
     lazy val baseUrl = {
       if(dryRun){
         "https://api.sandbox.stuart.com"
