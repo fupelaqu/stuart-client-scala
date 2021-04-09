@@ -164,7 +164,7 @@ import JobStatus._
 
 val jobQuery = JobQuery.defaultInstance
   .withStatus(
-    Seq(`new`, searching, in_progress)
+    Seq(`new`, searching, in_progress, scheduled)
   )
   .withPage(1)
   .withPerPage(10)
