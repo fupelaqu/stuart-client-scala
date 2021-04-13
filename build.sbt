@@ -67,6 +67,9 @@ libraryDependencies ++=
   typesafeConfig ++
   scalatest
 
+
+unmanagedResourceDirectories in Compile += baseDirectory.value / "src/main/protobuf"
+
 lazy val root = project.in(file("."))
   .configs(IntegrationTest)
   .settings(Defaults.itSettings, BuildInfoSettings.settings, pbSettings)
