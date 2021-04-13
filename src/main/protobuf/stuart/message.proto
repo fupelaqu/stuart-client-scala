@@ -2,7 +2,7 @@ syntax = "proto2";
 
 import "scalapb/scalapb.proto";
 import "google/protobuf/timestamp.proto";
-import "model/stuart.proto";
+import "stuart/model.proto";
 
 package app.softnetwork.stuart.client.scala.message;
 
