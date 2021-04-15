@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils
 
 import org.json4s.Formats
 
-import app.softnetwork.api.client.{Completion, GenericApi}
+import app.softnetwork.api.client.GenericApi
 
 import app.softnetwork.stuart.client.scala.message._
 import app.softnetwork.stuart.client.scala.model._
