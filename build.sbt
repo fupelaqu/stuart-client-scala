@@ -1,5 +1,3 @@
-import sbt.Resolver
-
 import Common._
 import app.softnetwork.sbt.build._
 
@@ -27,7 +25,7 @@ organization := "app.softnetwork.stuart"
 
 name := "stuart-client-scala"
 
-version := "0.1.3"
+version := "0.1.4"
 
 scalaVersion := "2.12.11"
 
@@ -57,11 +55,20 @@ val scalatest = Seq(
   "org.scalacheck" %% "scalacheck" % Versions.scalacheck % Test
 )
 
+publishArtifact in (Test, packageBin) := true
+
+// enable publishing the test API jar
+publishArtifact in (Test, packageDoc) := true
+
+// enable publishing the test sources jar
+publishArtifact in (Test, packageSrc) := true
+
 libraryDependencies ++=
   Seq(
     "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
     "app.softnetwork.protobuf" %% "scalapb-extensions" % "0.1.2",
-    "app.softnetwork.api" %% "generic-client-api" % "0.1.2",
+    "app.softnetwork.api" %% "generic-client-api" % "0.1.3",
+    "app.softnetwork.api" %% "generic-client-api" % "0.1.3" classifier "tests",
     "org.apache.commons" % "commons-lang3" % "3.12.0"
   ) ++
   typesafeConfig ++

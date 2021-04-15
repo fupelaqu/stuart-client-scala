@@ -9,13 +9,17 @@ import org.apache.commons.lang3.StringUtils
 
 import org.json4s.Formats
 
-import app.softnetwork.api.client.GenericApi
+import app.softnetwork.api.client.{Completion, GenericApi}
 
 import app.softnetwork.stuart.client.scala.message._
 import app.softnetwork.stuart.client.scala.model._
 import app.softnetwork.stuart.client.scala.serialization._
 
+import scala.concurrent.Future
+
 import scala.language.implicitConversions
+
+import scala.util.{Failure, Success}
 
 /**
   * Created by smanciot on 31/03/2021.
@@ -25,9 +29,19 @@ sealed trait StuartApi extends GenericApi with Oauth2Authenticator with StuartAd
   override lazy val config = Settings.StuartConfig
 }
 
+object StuartCompletion extends Completion {
+  implicit class StartApiSync[T](future: Future[Either[StuartError, T]]){
+    def sync[U](fun: Either[StuartError, T] => U) =
+      future complete() match {
+        case Success(s) => fun(s)
+        case Failure(f) => throw f
+      }
+  }
+}
+
 trait StuartAddressApi {_: StuartApi =>
 
-  def validateAddress(address: String, picking: Boolean = true): Either[StuartError, AddressValidated] = {
+  def validateAddress(address: String, picking: Boolean = true): Future[Either[StuartError, AddressValidated]] = {
     val `type` =
       if(picking){
         "picking"
@@ -52,50 +66,50 @@ trait StuartAddressApi {_: StuartApi =>
 
 trait StuartJobApi {_: StuartApi =>
 
-  def calculatePricing(job: JobRequest): Either[StuartError, Pricing] = {
+  def calculatePricing(job: JobRequest): Future[Either[StuartError, Pricing]] = {
     doPost[CalculateShipping, ShippingCalculated, StuartError](
       "/v2/jobs/pricing",
       CalculateShipping(job)
-    )match {
+    ) flatMap {
       case Right(shipping) =>
         val currency = shipping.currency
         val amount: Double = shipping.amount
         val taxPercentage: Double = config.tax.toDouble / 100
         val taxAmount: Double = BigDecimal((amount * config.tax) / 100).setScale(2, BigDecimal.RoundingMode.HALF_UP).toDouble
-        Right(
+        Future.successful(Right(
           Pricing.defaultInstance
             .withCurrency(currency)
             .withTaxPercentage(taxPercentage)
             .withPriceTaxIncluded(amount + taxAmount)
             .withPriceTaxExcluded(amount)
             .withTaxAmount(taxAmount)
-        )
-      case Left(l) => Left(l)
+        ))
+      case Left(l) => Future.successful(Left(l))
     }
   }
 
-  def validateJob(job: JobRequest): Either[StuartError, JobValidated] = {
+  def validateJob(job: JobRequest): Future[Either[StuartError, JobValidated]] = {
     doPost[ValidateJob, JobValidated, StuartError](
       "/v2/jobs/validate",
       ValidateJob(job)
     )
   }
 
-  def eta(job: JobRequest): Either[StuartError, JobEta] = {
+  def eta(job: JobRequest): Future[Either[StuartError, JobEta]] = {
     doPost[RequestJobEta, JobEta, StuartError](
       "/v2/jobs/eta",
       RequestJobEta(job)
     )
   }
 
-  def createJob(job: JobRequest): Either[StuartError, Job] = {
+  def createJob(job: JobRequest): Future[Either[StuartError, Job]] = {
     doPost[CreateJob, Job, StuartError](
       "/v2/jobs",
       CreateJob(job)
     )
   }
 
-  def updateJob(job_id: Int, job: JobPatch): Either[StuartError, Unit] = {
+  def updateJob(job_id: Int, job: JobPatch): Future[Either[StuartError, Unit]] = {
     executeWithoutResponse[UpdateJob, StuartError](
       s"/v2/jobs/$job_id",
       UpdateJob(job),
@@ -103,28 +117,28 @@ trait StuartJobApi {_: StuartApi =>
     )
   }
 
-  def listJobs(jobQuery: JobQuery): Either[StuartError, Seq[Job]] = {
+  def listJobs(jobQuery: JobQuery): Future[Either[StuartError, Seq[Job]]] = {
     val query = jobQuery2Map(jobQuery)
     logger.debug(s"query -> $query")
     doGet[Seq[Job], StuartError]("/v2/jobs", query)
   }
 
-  def getJob(job_id: Int): Either[StuartError, Job] = {
+  def getJob(job_id: Int): Future[Either[StuartError, Job]] = {
     doGet[Job, StuartError](s"/v2/jobs/$job_id")
   }
 
-  def getDriverPhoneNumber(delivery_id: Int): Either[StuartError, DriverPhoneNumber] = {
+  def getDriverPhoneNumber(delivery_id: Int): Future[Either[StuartError, DriverPhoneNumber]] = {
     executeWithoutRequest[DriverPhoneNumber, StuartError](s"/v2/deliveries/$delivery_id/phone_number")
   }
 
-  def cancelJob(job_id: Int): Either[StuartError, Unit] = {
+  def cancelJob(job_id: String): Future[Either[StuartError, Unit]] = {
     executeWithoutRequestAndResponse[StuartError](
       s"/v2/jobs/$job_id/cancel",
       HttpMethods.POST
     )
   }
 
-  def cancelDelivery(delivery_id: Int): Either[StuartError, Unit] = {
+  def cancelDelivery(delivery_id: String): Future[Either[StuartError, Unit]] = {
     executeWithoutRequestAndResponse[StuartError](
       s"/v2/deliveries/$delivery_id/cancel",
       HttpMethods.POST

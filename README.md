@@ -9,7 +9,7 @@ For a complete documentation of all endpoints offered by the Stuart API, you can
 ```scala
 resolvers += "Artifactory" at "https://softnetwork.jfrog.io/artifactory/releases/"
 
-libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.1.3"
+libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.1.4"
 ```
 
 ## Configuration
@@ -31,10 +31,16 @@ stuart{
 
 ### General usage
 
+StuartApi returns essentially futures of type `Future[Either[StuartError, aResponse]]`
+
+In order to return directly an `Either[StuartError, aResponse]` you may use the implicit function `sync`
+
 ```scala
-StuartApi().aCallTo(aRequest) match {
+import app.softnetwork.stuart.client.scala.StuartCompletion._
+
+StuartApi().aCallTo(aRequest) sync {
   case Left(l: StuartError) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
-  case Right(r: AResponse) => // ...
+  case Right(r: aResponse) => // ...
 }
 ```
 
@@ -55,7 +61,7 @@ import app.softnetwork.stuart.client.scala._
 import message._
 import model._
 
-StuartApi().validateAddress("12 rue rivoli, 75001 Paris") match {
+StuartApi().validateAddress("12 rue rivoli, 75001 Paris") sync {
   case Left(l: StuartError) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())
   case Right(r: AddressValidated) => // AddressValidated
     if(r.success){
@@ -120,7 +126,7 @@ val request =
     .withPickups(pickups)
     .withDropoffs(dropoffs)
 
-StuartApi().calculatePricing(request) match {
+StuartApi().calculatePricing(request) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(r: Pricing) => // eg Pricing(currency = EUR, tax_percentage = 0.2, price_tax_included = 21.34, price_tax_excluded = 17.78, tax_amount = 3.56)
 }
@@ -129,7 +135,7 @@ StuartApi().calculatePricing(request) match {
 ### Validate job parameters
 
 ```scala
-StuartApi().validateJob(request) match {
+StuartApi().validateJob(request) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(r: JobValidated) => 
     if(r.valid.getOrElse(false)){
@@ -144,7 +150,7 @@ StuartApi().validateJob(request) match {
 ### Request a job ETA
 
 ```scala
-StuartApi().eta(request) match {
+StuartApi().eta(request) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(r: JobEta) => // ... eg JobEta(eta = 54)
 }
@@ -153,7 +159,7 @@ StuartApi().eta(request) match {
 ### Create a job
 
 ```scala
-StuartApi().createJob(request) match {
+StuartApi().createJob(request) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(r: Job) => // ... do something with Job
 }
@@ -172,7 +178,7 @@ val jobQuery = JobQuery.defaultInstance
   .withPerPage(10)
   .withClientReference("client reference")
 
-StuartApi().listJobs(jobQuery) match {
+StuartApi().listJobs(jobQuery) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(r: Seq[Job]) => // ... do something with Seq[Job]
 }
@@ -181,7 +187,7 @@ StuartApi().listJobs(jobQuery) match {
 ### Get a job
 
 ```scala
-StuartApi().getJob(job_id) match {
+StuartApi().getJob(job_id) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(r: Job) => // ... do something with Job
 }
@@ -190,7 +196,7 @@ StuartApi().getJob(job_id) match {
 ### Get driver's anonymous phone number
 
 ```scala
-StuartApi().getDriverPhoneNumber(delivery_id) match {
+StuartApi().getDriverPhoneNumber(delivery_id) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(r: DriverPhoneNumber) => // ... do something with DriverPhoneNumber
 }
@@ -206,7 +212,7 @@ val patch = JobPatch.defaultInstance.withDeliveries(
   )
 )
 
-StuartApi().updateJob(job_id, patch) match {
+StuartApi().updateJob(job_id, patch) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(_) => // ... do something
 }
@@ -215,7 +221,7 @@ StuartApi().updateJob(job_id, patch) match {
 ### Cancel a job
 
 ```scala
-StuartApi().cancelJob(job_id) match {
+StuartApi().cancelJob(job_id) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(_) => // ... do something
 }
@@ -224,7 +230,7 @@ StuartApi().cancelJob(job_id) match {
 ### Cancel a delivery
 
 ```scala
-StuartApi().cancelDelivery(delivery_id) match {
+StuartApi().cancelDelivery(delivery_id) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(_) => // ... do something
 }
