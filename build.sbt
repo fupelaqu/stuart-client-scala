@@ -25,7 +25,7 @@ organization := "app.softnetwork.stuart"
 
 name := "stuart-client-scala"
 
-version := "0.1.4"
+version := "0.1.4.1"
 
 scalaVersion := "2.12.11"
 
@@ -66,7 +66,7 @@ publishArtifact in (Test, packageSrc) := true
 libraryDependencies ++=
   Seq(
     "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
-    "app.softnetwork.protobuf" %% "scalapb-extensions" % "0.1.2",
+    "app.softnetwork.protobuf" %% "scalapb-extensions" % "0.1.2.1",
     "app.softnetwork.api" %% "generic-client-api" % "0.1.3",
     "app.softnetwork.api" %% "generic-client-api" % "0.1.3" classifier "tests",
     "org.apache.commons" % "commons-lang3" % "3.12.0"
