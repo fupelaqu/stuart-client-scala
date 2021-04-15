@@ -36,7 +36,7 @@ StuartApi returns essentially futures of type `Future[Either[StuartError, aRespo
 In order to return directly an `Either[StuartError, aResponse]` you may use the implicit function `sync`
 
 ```scala
-import app.softnetwork.stuart.client.scala.StuartCompletion._
+import app.softnetwork.api.client.ApiCompletion._
 
 StuartApi().aCallTo(aRequest) sync {
   case Left(l: StuartError) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())

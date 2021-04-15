@@ -11,7 +11,7 @@ import org.scalatest.wordspec.AnyWordSpecLike
 import app.softnetwork.stuart.client.scala.message._
 import app.softnetwork.stuart.client.scala.model._
 
-import app.softnetwork.stuart.client.scala.StuartCompletion._
+import app.softnetwork.api.client.ApiCompletion._
 
 /**
   * Created by smanciot on 31/03/2021.

@@ -19,24 +19,12 @@ import scala.concurrent.Future
 
 import scala.language.implicitConversions
 
-import scala.util.{Failure, Success}
-
 /**
   * Created by smanciot on 31/03/2021.
   */
 sealed trait StuartApi extends GenericApi with Oauth2Authenticator with StuartAddressApi with StuartJobApi{
   override implicit def formats: Formats = stuartFormats
   override lazy val config = Settings.StuartConfig
-}
-
-object StuartCompletion extends Completion {
-  implicit class StartApiSync[T](future: Future[Either[StuartError, T]]){
-    def sync[U](fun: Either[StuartError, T] => U) =
-      future complete() match {
-        case Success(s) => fun(s)
-        case Failure(f) => throw f
-      }
-  }
 }
 
 trait StuartAddressApi {_: StuartApi =>
