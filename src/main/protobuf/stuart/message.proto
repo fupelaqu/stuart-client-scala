@@ -206,17 +206,11 @@ message DeliveryEvent{
 message StuartEvent{
     optional string event = 1;
     optional string type = 2;
-//    map<string, google.protobuf.Any> data = 3;
-//    optional StuartEventData data = 3;
-    oneof data {
-        JobEvent job = 3;
-        CurrentDeliveryEvent delivery = 4;
-        DriverEvent driver = 5;
-    }
+    optional StuartEventData data = 3;
 }
 
 message StuartEventData{
-    oneof event_data {
+    oneof sealed_value {
         JobEvent job = 1;
         CurrentDeliveryEvent delivery = 2;
         DriverEvent driver = 3;
