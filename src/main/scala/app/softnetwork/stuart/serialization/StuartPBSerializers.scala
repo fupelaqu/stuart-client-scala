@@ -1,8 +1,7 @@
-package app.softnetwork.stuart.client.scala.serialization
+package app.softnetwork.stuart.serialization
 
-import app.softnetwork.protobuf.ScalaPBSerializers
-import ScalaPBSerializers.GeneratedEnumSerializer
-import app.softnetwork.stuart.client.scala.model.{PackageType, TransportType, JobStatus, DeliveryStatus}
+import app.softnetwork.protobuf.ScalaPBSerializers.GeneratedEnumSerializer
+import app.softnetwork.stuart.model.{DeliveryStatus, JobStatus, PackageType, TransportType}
 
 /**
   * Created by smanciot on 02/04/2021.

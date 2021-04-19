@@ -1,30 +1,30 @@
-package app.softnetwork.stuart.client.scala
+package app.softnetwork.stuart.client
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.HttpMethods
-
 import akka.stream.Materializer
-import app.softnetwork.api.client.auth.{Oauth2ApiConfig, Oauth2Authenticator}
 import org.apache.commons.lang3.StringUtils
 
 import org.json4s.Formats
 
 import app.softnetwork.api.client.GenericApi
+import app.softnetwork.api.client.auth.Oauth2Authenticator
 
-import app.softnetwork.stuart.client.scala.message._
-import app.softnetwork.stuart.client.scala.model._
-import app.softnetwork.stuart.client.scala.serialization._
+import app.softnetwork.stuart.Settings.Config
+import app.softnetwork.stuart.message._
+import app.softnetwork.stuart.model._
+import app.softnetwork.stuart.serialization._
 
-import scala.concurrent.Future
+import _root_.scala.language.implicitConversions
 
-import scala.language.implicitConversions
+import _root_.scala.concurrent.Future
 
 /**
   * Created by smanciot on 31/03/2021.
   */
 sealed trait StuartApi extends GenericApi with Oauth2Authenticator with StuartAddressApi with StuartJobApi{
   override implicit def formats: Formats = stuartFormats
-  override lazy val config = Settings.StuartConfig
+  override lazy val config = Config.client
 }
 
 trait StuartAddressApi {_: StuartApi =>
@@ -180,23 +180,6 @@ object StuartApi {
         instance = Some(api)
         api
     }
-  }
-
-  case class StuartConfig(dryRun: Boolean,
-                          apiClientId: String,
-                          apiSecret: String,
-                          oauth2Api: String = "/oauth/token",
-                          zones: Map[String, Seq[String]],
-                          tax: Int = 20) extends Oauth2ApiConfig {
-    lazy val baseUrl = {
-      if(dryRun){
-        "https://api.sandbox.stuart.com"
-      }
-      else{
-        "https://api.stuart.com"
-      }
-    }
-
   }
 
 }

@@ -25,7 +25,7 @@ organization := "app.softnetwork.stuart"
 
 name := "stuart-client-scala"
 
-version := "0.1.4.1"
+version := "0.2-SNAPSHOT"
 
 scalaVersion := "2.12.11"
 

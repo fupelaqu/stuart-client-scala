@@ -1,6 +1,6 @@
-package app.softnetwork.stuart.client.scala.serialization
+package app.softnetwork.stuart.serialization
 
-import app.softnetwork.stuart.client.scala.message.ArrayOfString
+import app.softnetwork.stuart.message.ArrayOfString
 
 import scalapb.TypeMapper
 

@@ -4,13 +4,13 @@ import "scalapb/scalapb.proto";
 import "google/protobuf/timestamp.proto";
 import "stuart/model.proto";
 
-package app.softnetwork.stuart.client.scala.message;
+package app.softnetwork.stuart.message;
 
 option (scalapb.options) = {
     single_file: true
     flat_package: true
     import: "app.softnetwork.protobuf.ScalaPBTypeMappers._"
-    import: "app.softnetwork.stuart.client.scala.serialization.StuartPBTypeMappers._"
+    import: "app.softnetwork.stuart.serialization.StuartPBTypeMappers._"
 };
 
 message ArrayOfString{
@@ -42,7 +42,7 @@ message Pickup{
 }
 
 message DropOff{
-    optional app.softnetwork.stuart.client.scala.model.PackageType package_type = 1 [(scalapb.field).scala_name = "package_type"];
+    optional app.softnetwork.stuart.model.PackageType package_type = 1 [(scalapb.field).scala_name = "package_type"];
     optional string package_description = 2 [(scalapb.field).scala_name = "package_description"];
     optional string client_reference = 3 [(scalapb.field).scala_name = "client_reference"];
     required string address = 4;
@@ -56,7 +56,7 @@ message JobRequest{
     optional google.protobuf.Timestamp pickup_at = 1 [(scalapb.field).type = "java.time.ZonedDateTime", (scalapb.field).scala_name = "pickup_at"];
     optional google.protobuf.Timestamp dropoff_at = 2 [(scalapb.field).type = "java.time.ZonedDateTime", (scalapb.field).scala_name = "dropoff_at"];
     optional string assignment_code = 3;
-    optional app.softnetwork.stuart.client.scala.model.TransportType transport_type = 4;
+    optional app.softnetwork.stuart.model.TransportType transport_type = 4;
     repeated Pickup pickups = 5;
     repeated DropOff dropoffs = 6;
     repeated int32 fleets = 7;
@@ -98,7 +98,7 @@ enum JobListingOrder{
 }
 
 message JobQuery{
-    repeated app.softnetwork.stuart.client.scala.model.JobStatus status = 1;
+    repeated app.softnetwork.stuart.model.JobStatus status = 1;
     optional int32 page = 2;
     optional int32 per_page = 3 [(scalapb.field).scala_name = "per_page"];
     optional string client_reference = 4 [(scalapb.field).scala_name = "client_reference"];
@@ -134,4 +134,91 @@ message UpdateJob{
 
 message DriverPhoneNumber{
     optional string phone_number = 1 [(scalapb.field).scala_name = "phone_number"];
+}
+
+message TransportTypeBoxed{
+    required app.softnetwork.stuart.model.TransportType code = 1;
+}
+
+message PackageTypeBoxed{
+    required app.softnetwork.stuart.model.PackageType code = 1;
+}
+
+message DriverEvent{
+    optional string status = 1;
+    optional double latitude = 2;
+    optional double longitude = 3;
+    optional string name = 4;
+    optional string firstname = 5;
+    optional string lastname = 6;
+    optional string phone = 7;
+    optional string picture_path_imgix = 8 [(scalapb.field).scala_name = "picture_path_imgix"];
+    optional TransportTypeBoxed transportType = 9;
+    optional JobEvent job = 10;
+}
+
+enum Canceller{
+    client = 0;
+    operations = 1;
+}
+
+message CancellationEvent{
+    optional Canceller canceledBy = 1;
+    optional string reasonKey = 2;
+    optional string comment = 3;
+}
+
+message JobEvent {
+    optional int32 id = 1;
+    optional app.softnetwork.stuart.model.JobStatus status = 2;
+    optional string comment = 3;
+    optional google.protobuf.Timestamp pickupAt = 4 [(scalapb.field).type = "java.time.ZonedDateTime"];
+    optional google.protobuf.Timestamp dropoffAt = 5 [(scalapb.field).type = "java.time.ZonedDateTime"];
+    optional google.protobuf.Timestamp createdAt = 6 [(scalapb.field).type = "java.time.ZonedDateTime"];
+    optional google.protobuf.Timestamp endedAt = 7 [(scalapb.field).type = "java.time.ZonedDateTime"];
+    optional TransportTypeBoxed transportType = 8;
+    optional PackageTypeBoxed packageType = 9;
+    optional string originComment = 10;
+    optional string destinationComment = 11;
+    optional string jobReference = 12;
+    optional CurrentDeliveryEvent currentDelivery = 13;
+    repeated DeliveryEvent deliveries = 14;
+}
+
+message CurrentDeliveryEvent{
+    optional int32 id = 1;
+    optional DriverEvent driver = 2;
+    optional TransportTypeBoxed transportType = 3;
+    optional PackageTypeBoxed packageType = 4;
+    optional google.protobuf.Timestamp etaToDestination = 5 [(scalapb.field).type = "java.time.ZonedDateTime"];
+    optional google.protobuf.Timestamp etaToOrigin = 6 [(scalapb.field).type = "java.time.ZonedDateTime"];
+    optional app.softnetwork.stuart.model.DeliveryStatus status = 7;
+    optional string clientReference = 8;
+    optional string trackingUrl = 9;
+    optional CancellationEvent cancellation = 10;
+}
+
+message DeliveryEvent{
+    optional int32 id = 1;
+    optional string clientReference = 2;
+}
+
+message StuartEvent{
+    optional string event = 1;
+    optional string type = 2;
+//    map<string, google.protobuf.Any> data = 3;
+//    optional StuartEventData data = 3;
+    oneof data {
+        JobEvent job = 3;
+        CurrentDeliveryEvent delivery = 4;
+        DriverEvent driver = 5;
+    }
+}
+
+message StuartEventData{
+    oneof event_data {
+        JobEvent job = 1;
+        CurrentDeliveryEvent delivery = 2;
+        DriverEvent driver = 3;
+    }
 }
