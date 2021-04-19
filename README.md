@@ -16,6 +16,7 @@ libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.2-
 
 ```
 stuart{
+  # stuart client configuration
   client{
     # wether to use sandbox or not - default true
     dry-run = true
@@ -26,10 +27,22 @@ stuart{
     # stuart tax - default 20
     tax = 20
   }
+  # stuart server configuration
+  server{
+    # uri to handle stuart web hooks - default stuart
+    path = "stuart"
+    # stuart Webhook authentication
+    authentication {
+      # stuart Webhook authentication header - default X-STUART-SANDBOX
+      header = "X-STUART-SANDBOX"
+      # stuart Webhook authentication key - default changeit
+      key = "changeit"
+    }
+  }
 }
 ```
 
-## Usage
+## StuartApi
 
 ### General usage
 
@@ -235,5 +248,60 @@ StuartApi().cancelJob(job_id) sync {
 StuartApi().cancelDelivery(delivery_id) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(_) => // ... do something
+}
+```
+
+## StuartWebHooks
+
+### General usage
+
+```scala
+import app.softnetwork.stuart.server.StuartWebHooks
+import app.softnetwork.stuart.message.{CurrentDeliveryEvent, DriverEvent, JobEvent}
+
+
+trait MyStuartWebHooks extends StuartWebHooks {
+  /**
+    *
+    * @param job - the created job event
+    */
+  override def jobCreated(job: JobEvent): Unit = {
+    // ... do something with the event
+  }
+
+  /**
+    *
+    * @param job - the updated job event
+    */
+  override def jobUpdated(job: JobEvent): Unit = {
+    // ... do something with the event
+  }
+
+
+  /**
+    *
+    * @param delivery - the created delivery event
+    */
+  override def deliveryCreated(delivery: CurrentDeliveryEvent): Unit = {
+    // ... do something with the event
+  }
+
+  /**
+    *
+    * @param delivery - the updated delivery event
+    */
+  override def deliveryUpdated(delivery: CurrentDeliveryEvent): Unit = {
+    // ... do something with the event
+  }
+
+  /**
+    *
+    * @param driver - the updated driver event
+    */
+  override def driverUpdated(driver: DriverEvent): Unit = {
+    // ... do something with the event
+  }
+
+
 }
 ```
