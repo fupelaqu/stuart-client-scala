@@ -1,11 +1,10 @@
-package app.softnetwork.stuart.client.scala
-
-import org.json4s.Formats
+package app.softnetwork.stuart
 
 import app.softnetwork.api.client.serialization._
+import org.json4s.Formats
 
 /**
-  * Created by smanciot on 31/03/2021.
+  * Created by smanciot on 19/04/2021.
   */
 package object serialization {
 

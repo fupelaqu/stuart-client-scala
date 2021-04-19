@@ -25,7 +25,7 @@ organization := "app.softnetwork.stuart"
 
 name := "stuart-client-scala"
 
-version := "0.1.4.1"
+version := "0.2-SNAPSHOT"
 
 scalaVersion := "2.12.11"
 
@@ -40,7 +40,8 @@ val pbSettings = Seq(
 )
 
 resolvers ++= Seq(
-  "Artifactory" at "https://softnetwork.jfrog.io/artifactory/releases/",
+  "Softnetwork releases" at "https://softnetwork.jfrog.io/artifactory/releases/",
+  "Softnetwork snapshots" at "https://softnetwork.jfrog.io/artifactory/snapshots/",
   "Maven Central Server" at "https://repo1.maven.org/maven2",
   "Typesafe Server" at "https://repo.typesafe.com/typesafe/releases"
 )
@@ -48,6 +49,19 @@ resolvers ++= Seq(
 val typesafeConfig = Seq(
   "com.typesafe"      % "config"   % Versions.typesafeConfig,
   "com.github.kxbmap" %% "configs" % Versions.kxbmap excludeAll ExclusionRule(organization="com.typesafe", name="config")
+)
+
+val akka = Seq(
+  "com.typesafe.akka" %% "akka-actor" % Versions.akka,
+  "com.typesafe.akka" %% "akka-protobuf-v3" % Versions.akka,
+  "com.typesafe.akka" %% "akka-stream" % Versions.akka,
+  "com.typesafe.akka" %% "akka-slf4j" % Versions.akka,
+  "com.typesafe.akka" %% "akka-stream-testkit" % Versions.akka % Test,
+  "com.typesafe.akka" %% "akka-testkit"  % Versions.akka % Test
+)
+
+val akkaHttp = Seq(
+  "com.typesafe.akka" %% "akka-http-testkit" % Versions.akkaHttp % Test
 )
 
 val scalatest = Seq(
@@ -71,6 +85,8 @@ libraryDependencies ++=
     "app.softnetwork.api" %% "generic-client-api" % "0.1.3" classifier "tests",
     "org.apache.commons" % "commons-lang3" % "3.12.0"
   ) ++
+  akka ++
+  akkaHttp ++
   typesafeConfig ++
   scalatest
 

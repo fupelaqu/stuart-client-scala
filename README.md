@@ -2,28 +2,30 @@
 
 A client for Stuart API written in scala which relies on [generic-client-api](https://github.com/fupelaqu/generic-client-api) and [Protocol buffers](https://developers.google.com/protocol-buffers/) using [ScalaPB compiler](https://scalapb.github.io/)
 
-For a complete documentation of all endpoints offered by the Stuart API, you can visit [Stuart API documentation](https://stuart.api-docs.io).
+For a complete documentation of all endpoints and web hooks offered by the Stuart API, you can visit [Stuart API documentation](https://stuart.api-docs.io).
 
 ## Installation
 
 ```scala
-resolvers += "Artifactory" at "https://softnetwork.jfrog.io/artifactory/releases/"
+resolvers += "Artifactory" at "https://softnetwork.jfrog.io/artifactory/snapshots/"
 
-libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.1.4.1"
+libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.2-SNAPSHOT"
 ```
 
 ## Configuration
 
 ```
 stuart{
-  # wether to use sandbox or not - default true
-  dry-run = true
-  # stuart api client id
-  api-client-id = ""
-  # stuart api secret
-  api-secret = ""
-  # stuart tax - default 20
-  tax = 20
+  client{
+    # wether to use sandbox or not - default true
+    dry-run = true
+    # stuart api client id
+    api-client-id = ""
+    # stuart api secret
+    api-secret = ""
+    # stuart tax - default 20
+    tax = 20
+  }
 }
 ```
 
@@ -57,9 +59,9 @@ message StuartError{
 ### Validate address
 
 ```scala
-import app.softnetwork.stuart.client.scala._
-import message._
-import model._
+import app.softnetwork.stuart.client._
+import app.softnetwork.stuart.message._
+import app.softnetwork.stuart.model._
 
 StuartApi().validateAddress("12 rue rivoli, 75001 Paris") sync {
   case Left(l: StuartError) => // eg StuartError(error = OUT_OF_RANGE, message = This location is out of range, data = Map())

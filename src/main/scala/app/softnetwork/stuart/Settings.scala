@@ -1,5 +1,7 @@
-package app.softnetwork.stuart.client.scala
+package app.softnetwork.stuart
 
+import app.softnetwork.stuart.client.StuartClientConfig
+import app.softnetwork.stuart.server.StuartServerConfig
 import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.StrictLogging
 import configs.Configs
@@ -9,14 +11,15 @@ import configs.Configs
   */
 object Settings extends StrictLogging {
 
-  lazy val config: Config = ConfigFactory.load()
+  private[this] lazy val config: Config = ConfigFactory.load()
 
-  lazy val StuartConfig: StuartApi.StuartConfig = Configs[StuartApi.StuartConfig].get(config, "stuart").toEither match{
+  lazy val Config: StuartConfig = Configs[StuartConfig].get(config, "stuart").toEither match{
     case Left(configError)  =>
       logger.error(s"Something went wrong with the provided arguments $configError")
       throw configError.configException
     case Right(stuartConfig) => stuartConfig
   }
 
+  case class StuartConfig(client: StuartClientConfig, server: StuartServerConfig)
 }
 

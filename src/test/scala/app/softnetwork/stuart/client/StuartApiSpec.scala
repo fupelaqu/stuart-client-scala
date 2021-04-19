@@ -1,4 +1,4 @@
-package app.softnetwork.stuart.client.scala
+package app.softnetwork.stuart.client
 
 import java.time.ZonedDateTime
 import java.util.UUID
@@ -8,8 +8,8 @@ import com.typesafe.scalalogging.StrictLogging
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 
-import app.softnetwork.stuart.client.scala.message._
-import app.softnetwork.stuart.client.scala.model._
+import app.softnetwork.stuart.message._
+import app.softnetwork.stuart.model._
 
 import app.softnetwork.api.client.ApiCompletion._
 
