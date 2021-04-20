@@ -259,7 +259,6 @@ StuartApi().cancelDelivery(delivery_id) sync {
 import app.softnetwork.stuart.server.StuartWebHooks
 import app.softnetwork.stuart.message.{CurrentDeliveryEvent, DriverEvent, JobEvent}
 
-
 trait MyStuartWebHooks extends StuartWebHooks {
   /**
     *
@@ -301,7 +300,25 @@ trait MyStuartWebHooks extends StuartWebHooks {
   override def driverUpdated(driver: DriverEvent): Unit = {
     // ... do something with the event
   }
-
-
 }
 ```
+
+```scala
+
+// All your akka-http routes, including routes for Stuart Webhooks 
+import app.softnetwork.api.server.MainRoutes
+
+trait MyStuartMainRoutes extends MainRoutes with MyStuartWebHooks {
+  lazy val apiRoutes = stuartRoutes
+}
+```
+
+```scala
+
+// Your Application akka-http
+import app.softnetwork.api.server.Application
+
+object MyStuartApplication extends Application with MyStuartMainRoutes
+```
+
+After launching `MyStuartApplication`, your Webhooks api will be accessible by default at http://localhost:8080/api/stuart/webhooks
