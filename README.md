@@ -257,7 +257,7 @@ StuartApi().cancelDelivery(delivery_id) sync {
 
 ```scala
 import app.softnetwork.stuart.server.StuartWebHooks
-import app.softnetwork.stuart.message.{CurrentDeliveryEvent, DriverEvent, JobEvent}
+import app.softnetwork.stuart.message.{DeliveryEvent, DriverEvent, JobEvent}
 
 trait MyStuartWebHooks extends StuartWebHooks {
   /**
@@ -281,7 +281,7 @@ trait MyStuartWebHooks extends StuartWebHooks {
     *
     * @param delivery - the created delivery event
     */
-  override def deliveryCreated(delivery: CurrentDeliveryEvent): Unit = {
+  override def deliveryCreated(delivery: DeliveryEvent): Unit = {
     // ... do something with the event
   }
 
@@ -289,7 +289,7 @@ trait MyStuartWebHooks extends StuartWebHooks {
     *
     * @param delivery - the updated delivery event
     */
-  override def deliveryUpdated(delivery: CurrentDeliveryEvent): Unit = {
+  override def deliveryUpdated(delivery: DeliveryEvent): Unit = {
     // ... do something with the event
   }
 
