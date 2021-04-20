@@ -315,7 +315,7 @@ trait MyStuartMainRoutes extends MainRoutes with MyStuartWebHooks {
 
 ```scala
 
-// Your Application akka-http
+// Your akka-http Application
 import app.softnetwork.api.server.Application
 
 object MyStuartApplication extends Application with MyStuartMainRoutes
