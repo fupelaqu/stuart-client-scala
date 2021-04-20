@@ -61,7 +61,7 @@ trait StuartWebHooks extends Directives with Json4sSupport with StrictLogging {
                     complete(HttpResponse(StatusCodes.OK))
                   case _ => complete(HttpResponse(StatusCodes.BadRequest, entity = serialization.write(stuartEvent)))
                 }
-              case delivery: CurrentDeliveryEvent =>
+              case delivery: DeliveryEvent =>
                 stuartEvent.`type` match {
                   case Some("create") =>
                     deliveryCreated(delivery)
@@ -103,13 +103,13 @@ trait StuartWebHooks extends Directives with Json4sSupport with StrictLogging {
     *
     * @param delivery - the created delivery event
     */
-  def deliveryCreated(delivery: CurrentDeliveryEvent): Unit = ()
+  def deliveryCreated(delivery: DeliveryEvent): Unit = ()
 
   /**
     *
     * @param delivery - the updated delivery event
     */
-  def deliveryUpdated(delivery: CurrentDeliveryEvent): Unit = ()
+  def deliveryUpdated(delivery: DeliveryEvent): Unit = ()
 
   /**
     *

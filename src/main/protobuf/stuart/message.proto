@@ -181,11 +181,11 @@ message JobEvent {
     optional string originComment = 10;
     optional string destinationComment = 11;
     optional string jobReference = 12;
-    optional CurrentDeliveryEvent currentDelivery = 13;
-    repeated DeliveryEvent deliveries = 14;
+    optional DeliveryEvent currentDelivery = 13;
+    repeated DeliveryItemEvent deliveries = 14;
 }
 
-message CurrentDeliveryEvent{
+message DeliveryEvent{
     optional int32 id = 1;
     optional DriverEvent driver = 2;
     optional TransportTypeBoxed transportType = 3;
@@ -198,7 +198,7 @@ message CurrentDeliveryEvent{
     optional CancellationEvent cancellation = 10;
 }
 
-message DeliveryEvent{
+message DeliveryItemEvent{
     optional int32 id = 1;
     optional string clientReference = 2;
 }
@@ -212,7 +212,7 @@ message StuartEvent{
 message StuartEventData{
     oneof sealed_value {
         JobEvent job = 1;
-        CurrentDeliveryEvent delivery = 2;
+        DeliveryEvent delivery = 2;
         DriverEvent driver = 3;
     }
 }

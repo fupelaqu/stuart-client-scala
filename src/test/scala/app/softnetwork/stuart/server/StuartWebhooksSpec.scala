@@ -6,7 +6,7 @@ import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.testkit.{RouteTestTimeout, ScalatestRouteTest}
 
 import app.softnetwork.stuart.Settings.Config
-import app.softnetwork.stuart.message.{CurrentDeliveryEvent, DriverEvent, JobEvent, StuartGenericEvent}
+import app.softnetwork.stuart.message.{DeliveryEvent, DriverEvent, JobEvent, StuartGenericEvent}
 
 import com.typesafe.scalalogging.StrictLogging
 
@@ -259,7 +259,7 @@ class StuartWebHooksSpec extends StuartWebHooks
     *
     * @param delivery - the created delivery event
     */
-  override def deliveryCreated(delivery: CurrentDeliveryEvent): Unit = {
+  override def deliveryCreated(delivery: DeliveryEvent): Unit = {
     assert(delivery.id.getOrElse(0) == deliveryId)
   }
 
@@ -267,7 +267,7 @@ class StuartWebHooksSpec extends StuartWebHooks
     *
     * @param delivery - the updated delivery event
     */
-  override def deliveryUpdated(delivery: CurrentDeliveryEvent): Unit = {
+  override def deliveryUpdated(delivery: DeliveryEvent): Unit = {
     assert(delivery.id.getOrElse(0) == deliveryId)
     assert(delivery.clientReference.getOrElse("") == clientReference)
   }
