@@ -9,7 +9,7 @@ For a complete documentation of all endpoints and web hooks offered by the Stuar
 ```scala
 resolvers += "Artifactory" at "https://softnetwork.jfrog.io/artifactory/releases/"
 
-libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.2.2"
+libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.2.3"
 ```
 
 ## Configuration
