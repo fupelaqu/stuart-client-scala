@@ -136,14 +136,14 @@ trait StuartJobApi {_: StuartApi =>
   private[this] def jobQuery2Map(jobQuery: JobQuery): Map[String, String] = {
     import jobQuery._
     Map.empty ++ (status.toList match {
-      case Nil => Map.empty
+      case Nil => Map("status" -> JobStatus.values.map(_.name).mkString(","))
       case _ => Map("status" -> status.mkString(","))
     }) ++ (page match {
       case Some(p) => Map("page" -> p.toString)
-      case None => Map.empty
+      case None => Map("page" -> "1")
     }) ++ (per_page match {
       case Some(pp) => Map("per_page" -> pp.toString)
-      case None => Map.empty
+      case None => Map("per_page" -> "10")
     }) ++ (client_reference match {
       case Some(c) => Map("client_reference" -> c)
       case None => Map.empty
