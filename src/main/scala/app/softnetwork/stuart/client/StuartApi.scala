@@ -97,7 +97,7 @@ trait StuartJobApi {_: StuartApi =>
     )
   }
 
-  def updateJob(job_id: Int, job: JobPatch): Future[Either[StuartError, Unit]] = {
+  def updateJob(job_id: String, job: JobPatch): Future[Either[StuartError, Unit]] = {
     executeWithoutResponse[UpdateJob, StuartError](
       s"/v2/jobs/$job_id",
       UpdateJob(job),
@@ -111,11 +111,11 @@ trait StuartJobApi {_: StuartApi =>
     doGet[Seq[Job], StuartError]("/v2/jobs", query)
   }
 
-  def getJob(job_id: Int): Future[Either[StuartError, Job]] = {
+  def getJob(job_id: String): Future[Either[StuartError, Job]] = {
     doGet[Job, StuartError](s"/v2/jobs/$job_id")
   }
 
-  def getDriverPhoneNumber(delivery_id: Int): Future[Either[StuartError, DriverPhoneNumber]] = {
+  def getDriverPhoneNumber(delivery_id: String): Future[Either[StuartError, DriverPhoneNumber]] = {
     executeWithoutRequest[DriverPhoneNumber, StuartError](s"/v2/deliveries/$delivery_id/phone_number")
   }
 
