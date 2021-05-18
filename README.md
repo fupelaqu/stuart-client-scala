@@ -313,19 +313,29 @@ trait MyStuartWebHooks extends StuartWebHooks {
 ```scala
 
 // All your akka-http routes, including routes for Stuart Webhooks 
-import app.softnetwork.api.server.MainRoutes
+import akka.actor.typed.ActorSystem
 
-trait MyStuartMainRoutes extends MainRoutes with MyStuartWebHooks {
-  lazy val apiRoutes = stuartRoutes
+import app.softnetwork.api.server.ApiRoutes
+
+import app.softnetwork.stuart.serialization._
+
+import org.json4s.Formats
+
+trait MyStuartMainRoutes extends ApiRoutes with MyStuartWebHooks {
+  override implicit def formats: Formats = stuartFormats
+
+  override def apiRoutes(system: ActorSystem[_]) = stuartRoutes
 }
 ```
 
 ```scala
 
 // Your akka-http Application
-import app.softnetwork.api.server.Application
+import app.softnetwork.api.server.launch.Application
 
-object MyStuartApplication extends Application with MyStuartMainRoutes
+import app.softnetwork.persistence.query.InMemorySchemaProvider
+
+object MyStuartApplication extends Application with MyStuartMainRoutes with InMemorySchemaProvider
 ```
 
 After launching `MyStuartApplication`, your Webhooks api will be accessible by default at http://localhost:8080/api/stuart/webhooks
