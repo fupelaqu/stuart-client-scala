@@ -131,7 +131,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
       }
     }
     "Get a job" in {
-      StuartApi().getJob(job_id) sync {
+      StuartApi().getJob(s"$job_id") sync {
         case Left(l) =>
           logger.error(s"$l")
           fail(l.message)
@@ -141,7 +141,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
       }
     }
     "Get driver's anonymous phone number" in {
-      StuartApi().getDriverPhoneNumber(delivery_id) sync {
+      StuartApi().getDriverPhoneNumber(s"$delivery_id") sync {
         case Left(l) =>
           logger.error(s"$l")
           l.error == "NO_CURRENT_DELIVERY" shouldBe true
@@ -157,7 +157,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
           .withPackageDescription("description")
         )
       )
-      StuartApi().updateJob(job_id, patch) sync {
+      StuartApi().updateJob(s"$job_id", patch) sync {
         case Left(l) =>
           logger.error(s"$l")
           fail(l.message)

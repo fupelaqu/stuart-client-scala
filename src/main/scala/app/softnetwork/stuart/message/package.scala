@@ -36,7 +36,7 @@ package object message {
                 case Failure(f) => stuartEvent
               }
             case StuartGenericEvent(Some("delivery"), _, _) =>
-              Try(serialization.read[CurrentDeliveryEvent](input)) match {
+              Try(serialization.read[DeliveryEvent](input)) match {
                 case Success(delivery) => stuartEvent.withData(delivery)
                 case Failure(f) => stuartEvent
               }

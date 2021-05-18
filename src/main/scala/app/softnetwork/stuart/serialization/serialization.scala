@@ -1,6 +1,7 @@
 package app.softnetwork.stuart
 
-import app.softnetwork.api.client.serialization._
+import app.softnetwork.serialization._
+
 import org.json4s.Formats
 
 /**
@@ -8,5 +9,5 @@ import org.json4s.Formats
   */
 package object serialization {
 
-  val stuartFormats: Formats = defaultFormats ++ StuartPBSerializers.all
+  val stuartFormats: Formats = commonFormats ++ StuartPBSerializers.all
 }

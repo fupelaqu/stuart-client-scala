@@ -137,5 +137,5 @@ message Job{
     required int32 duration = 10;
     repeated Delivery deliveries = 11;
     required Pricing pricing = 12;
-    required Driver driver = 13;
+    optional Driver driver = 13;
 }

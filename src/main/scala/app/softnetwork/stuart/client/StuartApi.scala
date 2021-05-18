@@ -3,6 +3,7 @@ package app.softnetwork.stuart.client
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.HttpMethods
 import akka.stream.Materializer
+import app.softnetwork.stuart.config.Settings
 import org.apache.commons.lang3.StringUtils
 
 import org.json4s.Formats
@@ -10,7 +11,7 @@ import org.json4s.Formats
 import app.softnetwork.api.client.GenericApi
 import app.softnetwork.api.client.auth.Oauth2Authenticator
 
-import app.softnetwork.stuart.Settings.Config
+import Settings.Config
 import app.softnetwork.stuart.message._
 import app.softnetwork.stuart.model._
 import app.softnetwork.stuart.serialization._
@@ -97,7 +98,7 @@ trait StuartJobApi {_: StuartApi =>
     )
   }
 
-  def updateJob(job_id: Int, job: JobPatch): Future[Either[StuartError, Unit]] = {
+  def updateJob(job_id: String, job: JobPatch): Future[Either[StuartError, Unit]] = {
     executeWithoutResponse[UpdateJob, StuartError](
       s"/v2/jobs/$job_id",
       UpdateJob(job),
@@ -111,11 +112,11 @@ trait StuartJobApi {_: StuartApi =>
     doGet[Seq[Job], StuartError]("/v2/jobs", query)
   }
 
-  def getJob(job_id: Int): Future[Either[StuartError, Job]] = {
+  def getJob(job_id: String): Future[Either[StuartError, Job]] = {
     doGet[Job, StuartError](s"/v2/jobs/$job_id")
   }
 
-  def getDriverPhoneNumber(delivery_id: Int): Future[Either[StuartError, DriverPhoneNumber]] = {
+  def getDriverPhoneNumber(delivery_id: String): Future[Either[StuartError, DriverPhoneNumber]] = {
     executeWithoutRequest[DriverPhoneNumber, StuartError](s"/v2/deliveries/$delivery_id/phone_number")
   }
 
@@ -136,14 +137,14 @@ trait StuartJobApi {_: StuartApi =>
   private[this] def jobQuery2Map(jobQuery: JobQuery): Map[String, String] = {
     import jobQuery._
     Map.empty ++ (status.toList match {
-      case Nil => Map.empty
+      case Nil => Map("status" -> JobStatus.values.map(_.name).mkString(","))
       case _ => Map("status" -> status.mkString(","))
     }) ++ (page match {
       case Some(p) => Map("page" -> p.toString)
-      case None => Map.empty
+      case None => Map("page" -> "1")
     }) ++ (per_page match {
       case Some(pp) => Map("per_page" -> pp.toString)
-      case None => Map.empty
+      case None => Map("per_page" -> "10")
     }) ++ (client_reference match {
       case Some(c) => Map("client_reference" -> c)
       case None => Map.empty

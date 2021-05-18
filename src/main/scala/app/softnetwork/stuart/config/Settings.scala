@@ -1,7 +1,5 @@
-package app.softnetwork.stuart
+package app.softnetwork.stuart.config
 
-import app.softnetwork.stuart.client.StuartClientConfig
-import app.softnetwork.stuart.server.StuartServerConfig
 import com.typesafe.config.{Config, ConfigFactory}
 import com.typesafe.scalalogging.StrictLogging
 import configs.Configs
@@ -11,7 +9,7 @@ import configs.Configs
   */
 object Settings extends StrictLogging {
 
-  private[this] lazy val config: Config = ConfigFactory.load()
+  private[this] lazy val config: Config = ConfigFactory.load().withFallback(ConfigFactory.load("stuart-api.conf"))
 
   lazy val Config: StuartConfig = Configs[StuartConfig].get(config, "stuart").toEither match{
     case Left(configError)  =>

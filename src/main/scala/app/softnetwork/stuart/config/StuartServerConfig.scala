@@ -1,4 +1,4 @@
-package app.softnetwork.stuart.server
+package app.softnetwork.stuart.config
 
 /**
   * Created by smanciot on 19/04/2021.

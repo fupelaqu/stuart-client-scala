@@ -1,30 +1,25 @@
 package app.softnetwork.stuart.server
 
-import akka.actor.ActorSystem
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.model.headers.RawHeader
-import akka.http.scaladsl.testkit.{RouteTestTimeout, ScalatestRouteTest}
+import akka.http.scaladsl.testkit.InMemoryPersistenceScalatestRouteTest
 
-import app.softnetwork.stuart.Settings.Config
-import app.softnetwork.stuart.message.{CurrentDeliveryEvent, DriverEvent, JobEvent, StuartGenericEvent}
+import app.softnetwork.stuart.config.Settings
 
-import com.typesafe.scalalogging.StrictLogging
+import Settings.Config
+import app.softnetwork.stuart.message.{DeliveryEvent, DriverEvent, JobEvent, StuartGenericEvent}
+import app.softnetwork.stuart.serialization._
 
-import org.scalatest.matchers.should.Matchers
+import org.json4s.Formats
+
 import org.scalatest.wordspec.AnyWordSpecLike
-
-import scala.concurrent.duration._
 
 /**
   * Created by smanciot on 19/04/2021.
   */
-class StuartWebHooksSpec extends StuartWebHooks
-  with AnyWordSpecLike
-  with Matchers
-  with ScalatestRouteTest
-  with StrictLogging {
+class StuartWebHooksSpec extends StuartWebHooks with AnyWordSpecLike with InMemoryPersistenceScalatestRouteTest {
 
-  implicit def default(implicit system: ActorSystem) = RouteTestTimeout(2.seconds)
+  override implicit def formats: Formats = stuartFormats
 
   val jobId = 45153
 
@@ -259,7 +254,7 @@ class StuartWebHooksSpec extends StuartWebHooks
     *
     * @param delivery - the created delivery event
     */
-  override def deliveryCreated(delivery: CurrentDeliveryEvent): Unit = {
+  override def deliveryCreated(delivery: DeliveryEvent): Unit = {
     assert(delivery.id.getOrElse(0) == deliveryId)
   }
 
@@ -267,7 +262,7 @@ class StuartWebHooksSpec extends StuartWebHooks
     *
     * @param delivery - the updated delivery event
     */
-  override def deliveryUpdated(delivery: CurrentDeliveryEvent): Unit = {
+  override def deliveryUpdated(delivery: DeliveryEvent): Unit = {
     assert(delivery.id.getOrElse(0) == deliveryId)
     assert(delivery.clientReference.getOrElse("") == clientReference)
   }

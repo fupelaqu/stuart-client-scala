@@ -1,13 +1,15 @@
 package app.softnetwork.stuart.launch
 
-import app.softnetwork.api.server.Application
+import app.softnetwork.api.server.launch.Application
+import app.softnetwork.build.info.stuart.client.scala.BuildInfo
+import app.softnetwork.persistence.query.InMemorySchemaProvider
 
 import app.softnetwork.stuart.server.StuartMainRoutes
 
 /**
   * Created by smanciot on 19/04/2021.
   */
-object StuartApplication extends Application with StuartMainRoutes {
+object StuartApplication extends Application with StuartMainRoutes with InMemorySchemaProvider {
 
   /**
     *
@@ -24,4 +26,5 @@ object StuartApplication extends Application with StuartMainRoutes {
       |
     """.stripMargin
 
+  override def systemVersion(): String = BuildInfo.version
 }

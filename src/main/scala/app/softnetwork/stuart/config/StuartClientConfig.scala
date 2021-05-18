@@ -1,4 +1,4 @@
-package app.softnetwork.stuart.client
+package app.softnetwork.stuart.config
 
 import app.softnetwork.api.client.auth.Oauth2ApiConfig
 

@@ -1,6 +1,7 @@
 package app.softnetwork.stuart.serialization
 
 import app.softnetwork.protobuf.ScalaPBSerializers.GeneratedEnumSerializer
+import app.softnetwork.stuart.message.{JobListingOrder, Canceller}
 import app.softnetwork.stuart.model.{DeliveryStatus, JobStatus, PackageType, TransportType}
 
 /**
@@ -11,6 +12,8 @@ object StuartPBSerializers {
     GeneratedEnumSerializer(DeliveryStatus.enumCompanion),
     GeneratedEnumSerializer(JobStatus.enumCompanion),
     GeneratedEnumSerializer(TransportType.enumCompanion),
-    GeneratedEnumSerializer(PackageType.enumCompanion)
+    GeneratedEnumSerializer(PackageType.enumCompanion),
+    GeneratedEnumSerializer(JobListingOrder.enumCompanion),
+    GeneratedEnumSerializer(Canceller.enumCompanion)
   )
 }

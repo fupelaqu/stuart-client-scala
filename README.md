@@ -7,15 +7,16 @@ For a complete documentation of all endpoints and web hooks offered by the Stuar
 ## Installation
 
 ```scala
-resolvers += "Artifactory" at "https://softnetwork.jfrog.io/artifactory/snapshots/"
+resolvers += "Artifactory" at "https://softnetwork.jfrog.io/artifactory/releases/"
 
-libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.2-SNAPSHOT"
+libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.3.0"
 ```
 
 ## Configuration
 
 ```
 stuart{
+  # stuart client configuration
   client{
     # wether to use sandbox or not - default true
     dry-run = true
@@ -26,10 +27,22 @@ stuart{
     # stuart tax - default 20
     tax = 20
   }
+  # stuart server configuration
+  server{
+    # uri to handle stuart web hooks - default stuart
+    path = "stuart"
+    # stuart Webhook authentication
+    authentication {
+      # stuart Webhook authentication header - default X-STUART-SANDBOX
+      header = "X-STUART-SANDBOX"
+      # stuart Webhook authentication key - default changeit
+      key = "changeit"
+    }
+  }
 }
 ```
 
-## Usage
+## StuartApi
 
 ### General usage
 
@@ -161,9 +174,16 @@ StuartApi().eta(request) sync {
 ### Create a job
 
 ```scala
+var job_id: Int = _
+
+var delivery_id: Int = _
+
 StuartApi().createJob(request) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
-  case Right(r: Job) => // ... do something with Job
+  case Right(r: Job) => 
+    job_id = r.id
+    delivery_id = r.deliveries.head.id
+    // ... do something with Job
 }
 ```
 
@@ -189,7 +209,7 @@ StuartApi().listJobs(jobQuery) sync {
 ### Get a job
 
 ```scala
-StuartApi().getJob(job_id) sync {
+StuartApi().getJob(s"$job_id") sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(r: Job) => // ... do something with Job
 }
@@ -198,7 +218,7 @@ StuartApi().getJob(job_id) sync {
 ### Get driver's anonymous phone number
 
 ```scala
-StuartApi().getDriverPhoneNumber(delivery_id) sync {
+StuartApi().getDriverPhoneNumber(s"$delivery_id") sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(r: DriverPhoneNumber) => // ... do something with DriverPhoneNumber
 }
@@ -209,12 +229,12 @@ StuartApi().getDriverPhoneNumber(delivery_id) sync {
 ```scala
 val patch = JobPatch.defaultInstance.withDeliveries(
   Seq(DeliveryPatch.defaultInstance
-    .withId(idDelivery)
+    .withId(delivery_id.toString)
     .withPackageDescription("description")
   )
 )
 
-StuartApi().updateJob(job_id, patch) sync {
+StuartApi().updateJob(s"$job_id", patch) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(_) => // ... do something
 }
@@ -223,7 +243,7 @@ StuartApi().updateJob(job_id, patch) sync {
 ### Cancel a job
 
 ```scala
-StuartApi().cancelJob(job_id) sync {
+StuartApi().cancelJob(s"$job_id") sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(_) => // ... do something
 }
@@ -232,8 +252,90 @@ StuartApi().cancelJob(job_id) sync {
 ### Cancel a delivery
 
 ```scala
-StuartApi().cancelDelivery(delivery_id) sync {
+StuartApi().cancelDelivery(s"$delivery_id") sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(_) => // ... do something
 }
 ```
+
+## StuartWebHooks
+
+### General usage
+
+```scala
+import app.softnetwork.stuart.server.StuartWebHooks
+import app.softnetwork.stuart.message.{DeliveryEvent, DriverEvent, JobEvent}
+
+trait MyStuartWebHooks extends StuartWebHooks {
+  /**
+    *
+    * @param job - the created job event
+    */
+  override def jobCreated(job: JobEvent): Unit = {
+    // ... do something with the event
+  }
+
+  /**
+    *
+    * @param job - the updated job event
+    */
+  override def jobUpdated(job: JobEvent): Unit = {
+    // ... do something with the event
+  }
+
+
+  /**
+    *
+    * @param delivery - the created delivery event
+    */
+  override def deliveryCreated(delivery: DeliveryEvent): Unit = {
+    // ... do something with the event
+  }
+
+  /**
+    *
+    * @param delivery - the updated delivery event
+    */
+  override def deliveryUpdated(delivery: DeliveryEvent): Unit = {
+    // ... do something with the event
+  }
+
+  /**
+    *
+    * @param driver - the updated driver event
+    */
+  override def driverUpdated(driver: DriverEvent): Unit = {
+    // ... do something with the event
+  }
+}
+```
+
+```scala
+
+// All your akka-http routes, including routes for Stuart Webhooks 
+import akka.actor.typed.ActorSystem
+
+import app.softnetwork.api.server.ApiRoutes
+
+import app.softnetwork.stuart.serialization._
+
+import org.json4s.Formats
+
+trait MyStuartMainRoutes extends ApiRoutes with MyStuartWebHooks {
+  override implicit def formats: Formats = stuartFormats
+
+  override def apiRoutes(system: ActorSystem[_]) = stuartRoutes
+}
+```
+
+```scala
+
+// Your akka-http Application
+import app.softnetwork.api.server.launch.Application
+
+import app.softnetwork.persistence.query.InMemorySchemaProvider
+
+object MyStuartApplication extends Application with MyStuartMainRoutes with InMemorySchemaProvider
+```
+
+After launching `MyStuartApplication`, your Webhooks api will be accessible by default at http://localhost:8080/api/stuart/webhooks
