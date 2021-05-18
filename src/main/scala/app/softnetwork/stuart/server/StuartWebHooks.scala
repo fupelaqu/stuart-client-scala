@@ -2,8 +2,9 @@ package app.softnetwork.stuart.server
 
 import akka.http.scaladsl.model.{StatusCodes, HttpResponse}
 import akka.http.scaladsl.server._
+import app.softnetwork.stuart.config.Settings
 
-import app.softnetwork.stuart.Settings.Config._
+import Settings.Config._
 import app.softnetwork.stuart.message._
 import app.softnetwork.stuart.serialization._
 import com.typesafe.scalalogging.StrictLogging

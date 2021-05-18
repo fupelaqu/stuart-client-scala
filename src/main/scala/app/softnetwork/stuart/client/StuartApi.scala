@@ -3,6 +3,7 @@ package app.softnetwork.stuart.client
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.HttpMethods
 import akka.stream.Materializer
+import app.softnetwork.stuart.config.Settings
 import org.apache.commons.lang3.StringUtils
 
 import org.json4s.Formats
@@ -10,7 +11,7 @@ import org.json4s.Formats
 import app.softnetwork.api.client.GenericApi
 import app.softnetwork.api.client.auth.Oauth2Authenticator
 
-import app.softnetwork.stuart.Settings.Config
+import Settings.Config
 import app.softnetwork.stuart.message._
 import app.softnetwork.stuart.model._
 import app.softnetwork.stuart.serialization._
