@@ -25,16 +25,16 @@ organization := "app.softnetwork.stuart"
 
 name := "stuart-client-scala"
 
-version := "0.3.0"
+version := "0.3.1"
 
 scalaVersion := "2.12.11"
 
 scalacOptions ++= Seq("-deprecation", "-feature")
 
-parallelExecution in Test := false
+Test / parallelExecution := false
 
 val pbSettings = Seq(
-  PB.targets in Compile := Seq(
+  Compile / PB.targets := Seq(
     scalapb.gen() -> crossTarget.value / "protobuf_managed/main"
   )
 )
@@ -48,11 +48,11 @@ resolvers ++= Seq(
 libraryDependencies ++=
   Seq(
     "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
-    "app.softnetwork.protobuf" %% "scalapb-extensions" % "0.1.3",
-    "app.softnetwork.api" %% "generic-client-api" % "0.2.0",
-    "app.softnetwork.api" %% "generic-server-api" % "0.1.1" excludeAll ExclusionRule(organization = "com.github.dnvriend"),
+    "app.softnetwork.protobuf" %% "scalapb-extensions" % "0.1.4",
+    "app.softnetwork.api" %% "generic-client-api" % "0.2.1",
+    "app.softnetwork.api" %% "generic-server-api" % "0.1.6.0-rc2" excludeAll ExclusionRule(organization = "com.github.dnvriend"),
     "com.github.dnvriend" %% "akka-persistence-inmemory" % "2.5.15.2" excludeAll ExclusionRule(organization = "com.typesafe.akka"),
-    "app.softnetwork.api" %% "generic-server-api-testkit" % "0.1.1" % Test,
+    "app.softnetwork.api" %% "generic-server-api-testkit" % "0.1.6.0-rc2" % Test,
     "org.apache.commons" % "commons-lang3" % "3.12.0"
   )
 
