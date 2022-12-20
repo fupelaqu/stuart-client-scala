@@ -13,8 +13,7 @@ import app.softnetwork.stuart.model._
 
 import app.softnetwork.api.client.ApiCompletion._
 
-/**
-  * Created by smanciot on 31/03/2021.
+/** Created by smanciot on 31/03/2021.
   */
 class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
 
@@ -22,7 +21,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
 
   var delivery_id: Int = _
 
-  val client_reference = UUID.randomUUID().toString
+  val client_reference: String = UUID.randomUUID().toString
 
   val pickups = List(
     Pickup.defaultInstance
@@ -46,7 +45,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
           .withPhone("+33611112222")
       )
   )
-  val request =
+  val request: JobRequest =
     JobRequest.defaultInstance
       .withTransportType(TransportType.bike)
       // can not schedule a dropoff in less than 60 minutes from now
@@ -57,14 +56,14 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
   "StuartApi" must {
     "Validate address" in {
       StuartApi().validateAddress("12 rue rivoli, 75001 Paris") sync {
-        case Left(l) => fail()
+        case Left(_)  => fail()
         case Right(r) => r.success shouldBe true
       }
       StuartApi().validateAddress("fake address") sync {
         case Left(l) =>
           logger.info(s"$l")
           succeed
-        case Right(r) => fail()
+        case Right(_) => fail()
       }
     }
     "List zones per country" in {
@@ -152,9 +151,10 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
     }
     "Update a job" in {
       val patch = JobPatch.defaultInstance.withDeliveries(
-        Seq(DeliveryPatch.defaultInstance
-          .withId(delivery_id.toString)
-          .withPackageDescription("description")
+        Seq(
+          DeliveryPatch.defaultInstance
+            .withId(delivery_id.toString)
+            .withPackageDescription("description")
         )
       )
       StuartApi().updateJob(s"$job_id", patch) sync {
@@ -205,10 +205,11 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
             case Right(r) =>
               r.nonEmpty shouldBe true
               r.find(_.id == job_id) match {
-                case Some(j) => j.status match {
-                  case _: canceled.type => succeed
-                  case _ => fail()
-                }
+                case Some(j) =>
+                  j.status match {
+                    case _: canceled.type => succeed
+                    case _                => fail()
+                  }
                 case _ => fail()
               }
           }

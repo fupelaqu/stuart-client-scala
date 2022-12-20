@@ -3,21 +3,20 @@ package app.softnetwork.stuart.server
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.testkit.InMemoryPersistenceScalatestRouteTest
-
 import app.softnetwork.stuart.config.Settings
-
 import Settings.Config
 import app.softnetwork.stuart.message.{DeliveryEvent, DriverEvent, JobEvent, StuartGenericEvent}
 import app.softnetwork.stuart.serialization._
-
 import org.json4s.Formats
-
+import org.scalatest.Assertion
 import org.scalatest.wordspec.AnyWordSpecLike
 
-/**
-  * Created by smanciot on 19/04/2021.
+/** Created by smanciot on 19/04/2021.
   */
-class StuartWebHooksSpec extends StuartWebHooks with AnyWordSpecLike with InMemoryPersistenceScalatestRouteTest {
+class StuartWebHooksSpec
+    extends AnyWordSpecLike
+    with InMemoryPersistenceScalatestRouteTest
+    with StuartMainRoutes {
 
   override implicit def formats: Formats = stuartFormats
 
@@ -27,7 +26,7 @@ class StuartWebHooksSpec extends StuartWebHooks with AnyWordSpecLike with InMemo
 
   val deliveryId = 40567
 
-  val jobCreated =
+  val jobCreated: String =
     s"""
       |{
       |  "event": "job",
@@ -45,7 +44,7 @@ class StuartWebHooksSpec extends StuartWebHooks with AnyWordSpecLike with InMemo
       |}
     """.stripMargin
 
-  val jobUpdated =
+  val jobUpdated: String =
     s"""
       |{
       |  "event": "job",
@@ -86,7 +85,7 @@ class StuartWebHooksSpec extends StuartWebHooks with AnyWordSpecLike with InMemo
       |}
     """.stripMargin
 
-  val deliveryCreated =
+  val deliveryCreated: String =
     s"""
       |{
       |  "event": "delivery",
@@ -109,7 +108,7 @@ class StuartWebHooksSpec extends StuartWebHooks with AnyWordSpecLike with InMemo
       |}
     """.stripMargin
 
-  val deliveryUpdated =
+  val deliveryUpdated: String =
     s"""
       |{
       |  "event": "delivery",
@@ -144,7 +143,7 @@ class StuartWebHooksSpec extends StuartWebHooks with AnyWordSpecLike with InMemo
       |}
       |""".stripMargin
 
-  val driverUpdated =
+  val driverUpdated: String =
     s"""
       |{
       |  "event": "driver",
@@ -210,7 +209,8 @@ class StuartWebHooksSpec extends StuartWebHooks with AnyWordSpecLike with InMemo
       |}
     """.stripMargin
 
-  val header = RawHeader(Config.server.authentication.header, Config.server.authentication.key)
+  val header: RawHeader =
+    RawHeader(Config.server.authentication.header, Config.server.authentication.key)
 
   "Stuart Web Hooks" should {
     "handle job created event" in {
@@ -230,18 +230,16 @@ class StuartWebHooksSpec extends StuartWebHooks with AnyWordSpecLike with InMemo
     }
   }
 
-  /**
-    *
-    * @param job - the created job event
+  /** @param job
+    *   - the created job event
     */
   override def jobCreated(job: JobEvent): Unit = {
     assert(job.id.getOrElse(0) == jobId)
     assert(job.jobReference.getOrElse("") == clientReference)
   }
 
-  /**
-    *
-    * @param job - the updated job event
+  /** @param job
+    *   - the updated job event
     */
   override def jobUpdated(job: JobEvent): Unit = {
     assert(job.id.getOrElse(0) == jobId)
@@ -249,27 +247,23 @@ class StuartWebHooksSpec extends StuartWebHooks with AnyWordSpecLike with InMemo
     assert(job.currentDelivery.flatMap(_.id).getOrElse(0) == deliveryId)
   }
 
-
-  /**
-    *
-    * @param delivery - the created delivery event
+  /** @param delivery
+    *   - the created delivery event
     */
   override def deliveryCreated(delivery: DeliveryEvent): Unit = {
     assert(delivery.id.getOrElse(0) == deliveryId)
   }
 
-  /**
-    *
-    * @param delivery - the updated delivery event
+  /** @param delivery
+    *   - the updated delivery event
     */
   override def deliveryUpdated(delivery: DeliveryEvent): Unit = {
     assert(delivery.id.getOrElse(0) == deliveryId)
     assert(delivery.clientReference.getOrElse("") == clientReference)
   }
 
-  /**
-    *
-    * @param driver - the updated driver event
+  /** @param driver
+    *   - the updated driver event
     */
   override def driverUpdated(driver: DriverEvent): Unit = {
     assert(driver.job.flatMap(_.id).getOrElse(0) == jobId)
@@ -277,9 +271,9 @@ class StuartWebHooksSpec extends StuartWebHooks with AnyWordSpecLike with InMemo
     assert(driver.job.flatMap(_.currentDelivery.flatMap(_.id)).getOrElse(0) == deliveryId)
   }
 
-  protected def testRoute(input: String) = {
-    Post(s"/${Config.server.path}/webhooks", serialization.read[StuartGenericEvent](input)
-    ).withHeaders(header) ~> stuartRoutes ~> check {
+  protected def testRoute(input: String): Assertion = {
+    Post(s"/${Config.server.path}/webhooks", serialization.read[StuartGenericEvent](input))
+      .withHeaders(header) ~> stuartRoutes ~> check {
       status shouldEqual StatusCodes.OK
     }
   }
