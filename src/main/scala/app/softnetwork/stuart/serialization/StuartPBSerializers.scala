@@ -1,11 +1,10 @@
 package app.softnetwork.stuart.serialization
 
 import app.softnetwork.protobuf.ScalaPBSerializers.GeneratedEnumSerializer
-import app.softnetwork.stuart.message.{JobListingOrder, Canceller}
+import app.softnetwork.stuart.message.{Canceller, JobListingOrder}
 import app.softnetwork.stuart.model.{DeliveryStatus, JobStatus, PackageType, TransportType}
 
-/**
-  * Created by smanciot on 02/04/2021.
+/** Created by smanciot on 02/04/2021.
   */
 object StuartPBSerializers {
   def all = Seq(

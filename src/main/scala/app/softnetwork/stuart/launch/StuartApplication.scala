@@ -6,14 +6,12 @@ import app.softnetwork.persistence.query.InMemorySchemaProvider
 
 import app.softnetwork.stuart.server.StuartMainRoutes
 
-/**
-  * Created by smanciot on 19/04/2021.
+/** Created by smanciot on 19/04/2021.
   */
 object StuartApplication extends Application with StuartMainRoutes with InMemorySchemaProvider {
 
-  /**
-    *
-    * @return the banner to print to the console
+  /** @return
+    *   the banner to print to the console
     */
   override def banner: String =
     """

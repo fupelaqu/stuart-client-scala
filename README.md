@@ -1,3 +1,8 @@
+![Build Status](https://github.com/fupelaqu/stuart-client-scala/workflows/Build/badge.svg)
+[![codecov](https://codecov.io/gh/fupelaqu/stuart-client-scala/branch/main/graph/badge.svg)](https://codecov.io/gh/fupelaqu/stuart-client-scala/)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/f7140978c1e0443e8c0bf7765b56b517)](https://www.codacy.com/gh/fupelaqu/stuart-client-scala/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=fupelaqu/stuart-client-scala&amp;utm_campaign=Badge_Grade)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # stuart-client-scala
 
 A client for Stuart API written in scala which relies on [generic-client-api](https://github.com/fupelaqu/generic-client-api) and [Protocol buffers](https://developers.google.com/protocol-buffers/) using [ScalaPB compiler](https://scalapb.github.io/)
@@ -9,7 +14,7 @@ For a complete documentation of all endpoints and web hooks offered by the Stuar
 ```scala
 resolvers += "Artifactory" at "https://softnetwork.jfrog.io/artifactory/releases/"
 
-libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.3.1"
+libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.3.3"
 ```
 
 ## Configuration
