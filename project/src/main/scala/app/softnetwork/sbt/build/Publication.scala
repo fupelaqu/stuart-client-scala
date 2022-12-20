@@ -1,5 +1,5 @@
 package app.softnetwork.sbt.build
-  
+
 import sbt._
 
 object Publication {
@@ -16,12 +16,10 @@ object Publication {
 
   val snapshotsRepository = "snapshots" at artifactoryUrl + "libs-snapshot-local"
 
-
   private def selectDestination(version: String) =
-    if(version.trim.toUpperCase.endsWith("SNAPSHOT")) {
+    if (version.trim.toUpperCase.endsWith("SNAPSHOT")) {
       Some(snapshotsRepository)
-    }
-    else {
+    } else {
       Some(releasesRepository)
     }
 }
