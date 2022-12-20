@@ -2,7 +2,7 @@
 
 A client for Stuart API written in scala which relies on [generic-client-api](https://github.com/fupelaqu/generic-client-api) and [Protocol buffers](https://developers.google.com/protocol-buffers/) using [ScalaPB compiler](https://scalapb.github.io/)
 
-For a complete documentation of all endpoints and web hooks offered by the Stuart API, you can visit [Stuart API documentation](https://stuart.api-docs.io).
+For a complete documentation of all endpoints and web hooks offered by the Stuart API, you can visit [Stuart API documentation](https://api-docs.stuart.com).
 
 ## Installation
 
