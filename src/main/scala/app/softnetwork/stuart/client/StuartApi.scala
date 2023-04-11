@@ -2,7 +2,6 @@ package app.softnetwork.stuart.client
 
 import akka.actor.ActorSystem
 import akka.http.scaladsl.model.HttpMethods
-import akka.stream.Materializer
 import app.softnetwork.stuart.config.{Settings, StuartClientConfig}
 import org.apache.commons.lang3.StringUtils
 import org.json4s.Formats
@@ -182,10 +181,8 @@ object StuartApi {
     instance match {
       case Some(s) => s
       case _ =>
-        val api = new StuartApi {
-          implicit val system = sys
-          implicit val ec = system.dispatcher
-          implicit val mat = Materializer(system)
+        val api: StuartApi = new StuartApi {
+          implicit val system: ActorSystem = sys
         }
         instance = Some(api)
         api

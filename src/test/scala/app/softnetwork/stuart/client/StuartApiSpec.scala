@@ -49,7 +49,8 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
     JobRequest.defaultInstance
       .withTransportType(TransportType.bike)
       // can not schedule a dropoff in less than 60 minutes from now
-      .withDropoffAt(ZonedDateTime.now().plusHours(1).plusMinutes(1))
+      .withPickupAt(ZonedDateTime.now().plusHours(1).plusMinutes(1))
+//      .withDropoffAt(ZonedDateTime.now().plusHours(1).plusMinutes(1))
       .withPickups(pickups)
       .withDropoffs(dropoffs)
 
