@@ -25,7 +25,7 @@ organization := "app.softnetwork.stuart"
 
 name := "stuart-client-scala"
 
-version := "0.3.4"
+version := "0.4.0"
 
 scalaVersion := "2.12.11"
 
@@ -50,8 +50,8 @@ libraryDependencies ++=
     "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
     "app.softnetwork.protobuf" %% "scalapb-extensions" % "0.1.6",
     "app.softnetwork.api" %% "generic-client-api" % "0.2.3",
-    "app.softnetwork.api" %% "generic-server-api" % "0.2.8",
-    "app.softnetwork.api" %% "generic-server-api-testkit" % "0.2.8" % Test,
+    "app.softnetwork.api" %% "generic-server-api" % "0.3.0.2",
+    "app.softnetwork.api" %% "generic-server-api-testkit" % "0.3.0.2" % Test,
     "org.apache.commons" % "commons-lang3" % "3.12.0"
   )
 

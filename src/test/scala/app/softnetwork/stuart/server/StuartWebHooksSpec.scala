@@ -10,6 +10,7 @@ import app.softnetwork.stuart.serialization._
 import org.json4s.Formats
 import org.scalatest.Assertion
 import org.scalatest.wordspec.AnyWordSpecLike
+import org.slf4j.{Logger, LoggerFactory}
 
 /** Created by smanciot on 19/04/2021.
   */
@@ -17,6 +18,8 @@ class StuartWebHooksSpec
     extends AnyWordSpecLike
     with InMemoryPersistenceScalatestRouteTest
     with StuartMainRoutes {
+
+  lazy val log: Logger = LoggerFactory getLogger getClass.getName
 
   override implicit def formats: Formats = stuartFormats
 

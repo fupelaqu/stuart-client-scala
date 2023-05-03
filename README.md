@@ -14,7 +14,7 @@ For a complete documentation of all endpoints and web hooks offered by the Stuar
 ```scala
 resolvers += "Artifactory" at "https://softnetwork.jfrog.io/artifactory/releases/"
 
-libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.3.4"
+libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.4.0"
 ```
 
 ## Configuration
@@ -336,11 +336,11 @@ trait MyStuartMainRoutes extends ApiRoutes with MyStuartWebHooks {
 ```scala
 
 // Your akka-http Application
-import app.softnetwork.api.server.launch.Application
+import app.softnetwork.stuart.launch.StuartApi
 
-import app.softnetwork.persistence.query.InMemorySchemaProvider
-
-object MyStuartApplication extends Application with MyStuartMainRoutes with InMemorySchemaProvider
+object MyStuartApplication extends StuartApi with MyStuartMainRoutes{
+  override lazy val config = akkaConfig
+}
 ```
 
 After launching `MyStuartApplication`, your Webhooks api will be accessible by default at http://localhost:8080/api/stuart/webhooks
