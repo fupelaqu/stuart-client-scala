@@ -1,16 +1,15 @@
 package app.softnetwork.stuart.launch
 
-import akka.actor.typed.ActorSystem
 import app.softnetwork.api.server.ApiServer
 import app.softnetwork.build.info.stuart.client.scala.BuildInfo
-import app.softnetwork.persistence.schema.{InMemorySchemaProvider, SchemaProvider}
+import app.softnetwork.persistence.schema.SchemaProvider
 import app.softnetwork.stuart.server.StuartMainRoutes
 import com.typesafe.config.{Config, ConfigFactory}
 import org.slf4j.{Logger, LoggerFactory}
 
 /** Created by smanciot on 19/04/2021.
   */
-trait StuartApi extends ApiServer with StuartMainRoutes {
+trait StuartApi extends ApiServer with StuartMainRoutes { _: SchemaProvider =>
 
   lazy val log: Logger = LoggerFactory getLogger getClass.getName
 
@@ -29,8 +28,6 @@ trait StuartApi extends ApiServer with StuartMainRoutes {
     """.stripMargin
 
   override def systemVersion(): String = BuildInfo.version
-
-  override def schemaProvider: ActorSystem[_] => SchemaProvider = _ => new InMemorySchemaProvider {}
 
   lazy val akkaConfig: Config =
     ConfigFactory

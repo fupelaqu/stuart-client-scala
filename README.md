@@ -14,7 +14,7 @@ For a complete documentation of all endpoints and web hooks offered by the Stuar
 ```scala
 resolvers += "Artifactory" at "https://softnetwork.jfrog.io/artifactory/releases/"
 
-libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.4.0"
+libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.4.0.1"
 ```
 
 ## Configuration
@@ -337,8 +337,9 @@ trait MyStuartMainRoutes extends ApiRoutes with MyStuartWebHooks {
 
 // Your akka-http Application
 import app.softnetwork.stuart.launch.StuartApi
+import app.softnetwork.persistence.schema.InMemorySchemaProvider
 
-object MyStuartApplication extends StuartApi with MyStuartMainRoutes{
+object MyStuartApplication extends StuartApi with MyStuartMainRoutes with InMemorySchemaProvider{
   override lazy val config = akkaConfig
 }
 ```
