@@ -9,6 +9,7 @@ option (scalapb.options) = {
     single_file: true
     flat_package: true
     import: "app.softnetwork.protobuf.ScalaPBTypeMappers._"
+    preserve_unknown_fields: false
 };
 
 enum JobStatus{
