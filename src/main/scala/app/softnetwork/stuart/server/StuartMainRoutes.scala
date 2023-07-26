@@ -8,10 +8,10 @@ import org.json4s.Formats
 
 /** Created by smanciot on 19/04/2021.
   */
-trait StuartMainRoutes extends ApiRoutes with StuartWebHooks {
+trait StuartMainRoutes extends ApiRoutes {
 
   override implicit def formats: Formats = stuartFormats
 
-  override def apiRoutes(system: ActorSystem[_]): Route = stuartRoutes
+  override def apiRoutes(system: ActorSystem[_]): Route = StuartWebHooks.stuartRoutes
 
 }

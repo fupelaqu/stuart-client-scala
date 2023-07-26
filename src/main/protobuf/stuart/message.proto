@@ -11,6 +11,7 @@ option (scalapb.options) = {
     flat_package: true
     import: "app.softnetwork.protobuf.ScalaPBTypeMappers._"
     import: "app.softnetwork.stuart.serialization.StuartPBTypeMappers._"
+    preserve_unknown_fields: false
 };
 
 message ArrayOfString{

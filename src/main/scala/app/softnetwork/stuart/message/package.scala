@@ -43,7 +43,7 @@ package object message {
                 case Success(delivery) => stuartEvent.withData(delivery)
                 case Failure(_)        => stuartEvent
               }
-            case StuartGenericEvent(Some("driver"), t @ Some(atype), _) =>
+            case StuartGenericEvent(Some("driver"), _ @Some(atype), _) =>
               atype match {
                 case "update" =>
                   Try(serialization.read[DriverEvent](input)) match {

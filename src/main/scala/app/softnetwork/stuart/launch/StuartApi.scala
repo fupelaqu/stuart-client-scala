@@ -1,15 +1,14 @@
 package app.softnetwork.stuart.launch
 
-import app.softnetwork.api.server.ApiServer
+import app.softnetwork.api.server.{ApiRoutes, ApiServer}
 import app.softnetwork.build.info.stuart.client.scala.BuildInfo
 import app.softnetwork.persistence.schema.SchemaProvider
-import app.softnetwork.stuart.server.StuartMainRoutes
 import com.typesafe.config.{Config, ConfigFactory}
 import org.slf4j.{Logger, LoggerFactory}
 
 /** Created by smanciot on 19/04/2021.
   */
-trait StuartApi extends ApiServer with StuartMainRoutes { _: SchemaProvider =>
+trait StuartApi extends ApiServer { _: SchemaProvider with ApiRoutes =>
 
   lazy val log: Logger = LoggerFactory getLogger getClass.getName
 

@@ -5,6 +5,8 @@ import akka.http.scaladsl.model.headers.RawHeader
 import akka.http.scaladsl.testkit.InMemoryPersistenceScalatestRouteTest
 import app.softnetwork.stuart.config.Settings
 import Settings.Config
+import app.softnetwork.api.server.ApiRoutes
+import app.softnetwork.api.server.config.ServerSettings
 import app.softnetwork.stuart.message.{DeliveryEvent, DriverEvent, JobEvent, StuartGenericEvent}
 import app.softnetwork.stuart.serialization._
 import org.json4s.Formats
@@ -14,10 +16,12 @@ import org.slf4j.{Logger, LoggerFactory}
 
 /** Created by smanciot on 19/04/2021.
   */
-class StuartWebHooksSpec
+trait StuartWebHooksSpec
     extends AnyWordSpecLike
     with InMemoryPersistenceScalatestRouteTest
-    with StuartMainRoutes {
+    with StuartCallBacks { _: ApiRoutes =>
+
+  import app.softnetwork.serialization._
 
   lazy val log: Logger = LoggerFactory getLogger getClass.getName
 
@@ -275,8 +279,11 @@ class StuartWebHooksSpec
   }
 
   protected def testRoute(input: String): Assertion = {
-    Post(s"/${Config.server.path}/webhooks", serialization.read[StuartGenericEvent](input))
-      .withHeaders(header) ~> stuartRoutes ~> check {
+    Post(
+      s"/${ServerSettings.RootPath}/${Config.server.path}/webhooks",
+      serialization.read[StuartGenericEvent](input)
+    )
+      .withHeaders(header) ~> routes ~> check {
       status shouldEqual StatusCodes.OK
     }
   }

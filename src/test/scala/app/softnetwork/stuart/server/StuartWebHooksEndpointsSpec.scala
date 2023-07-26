@@ -1,0 +1,3 @@
+package app.softnetwork.stuart.server
+
+class StuartWebHooksEndpointsSpec extends StuartWebHooksSpec with StuartMainEndpoints
