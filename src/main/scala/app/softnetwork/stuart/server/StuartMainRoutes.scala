@@ -2,7 +2,7 @@ package app.softnetwork.stuart.server
 
 import akka.actor.typed.ActorSystem
 import akka.http.scaladsl.server.Route
-import app.softnetwork.api.server.ApiRoutes
+import app.softnetwork.api.server.{ApiRoute, ApiRoutes}
 import app.softnetwork.stuart.serialization._
 import org.json4s.Formats
 
@@ -12,6 +12,5 @@ trait StuartMainRoutes extends ApiRoutes {
 
   override implicit def formats: Formats = stuartFormats
 
-  override def apiRoutes(system: ActorSystem[_]): Route = StuartWebHooks.stuartRoutes
-
+  override def apiRoutes: ActorSystem[_] => List[ApiRoute] = _ => List(StuartWebHooks)
 }

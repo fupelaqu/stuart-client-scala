@@ -3,6 +3,7 @@ package app.softnetwork.stuart.server
 import app.softnetwork.api.server.{ApiEndpoint, ApiErrors}
 import app.softnetwork.stuart.config.Settings
 import Settings.Config._
+import akka.actor.typed.ActorSystem
 import app.softnetwork.stuart.message.StuartGenericEvent.toStuartEvent
 import app.softnetwork.stuart.message._
 import app.softnetwork.stuart.serialization.stuartFormats
@@ -13,7 +14,7 @@ import sttp.tapir.generic.auto.SchemaDerivation
 import sttp.tapir.Tapir
 import sttp.tapir.server.ServerEndpoint
 
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 trait StuartWebHooksEndpoints
     extends ApiEndpoint
@@ -25,7 +26,7 @@ trait StuartWebHooksEndpoints
 
   override implicit def formats: Formats = stuartFormats
 
-  private val webHooks: ServerEndpoint[AkkaStreams with WebSockets, Future] =
+  val webHooks: ServerEndpoint[AkkaStreams with WebSockets, Future] =
     endpoint
       .description("handle stuart WebHooks")
       .in(server.path / "webhooks")
@@ -84,4 +85,9 @@ trait StuartWebHooksEndpoints
     )
 }
 
-object StuartWebHooksEndpoints extends StuartWebHooksEndpoints
+object StuartWebHooksEndpoints {
+  def apply(aSystem: ActorSystem[_]): StuartWebHooksEndpoints =
+    new StuartWebHooksEndpoints {
+      override implicit def ec: ExecutionContext = aSystem.executionContext
+    }
+}

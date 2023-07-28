@@ -7,5 +7,6 @@ import org.json4s.Formats
 
 trait StuartMainEndpoints extends ApiEndpoints {
   override implicit def formats: Formats = stuartFormats
-  override def endpoints: ActorSystem[_] => List[ApiEndpoint] = _ => List(StuartWebHooksEndpoints)
+  override def endpoints: ActorSystem[_] => List[ApiEndpoint] = system =>
+    List(StuartWebHooksEndpoints(system))
 }

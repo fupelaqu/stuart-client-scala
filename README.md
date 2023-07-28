@@ -14,7 +14,7 @@ For a complete documentation of all endpoints and web hooks offered by the Stuar
 ```scala
 resolvers += "Artifactory" at "https://softnetwork.jfrog.io/artifactory/releases/"
 
-libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.5.0"
+libraryDependencies += "app.softnetwork.stuart" %% "stuart-client-scala" % "0.5.1"
 ```
 
 ## Configuration
@@ -329,7 +329,7 @@ import org.json4s.Formats
 trait MyStuartMainRoutes extends ApiRoutes with MyStuartWebHooks {
   override implicit def formats: Formats = stuartFormats
 
-  override def apiRoutes(system: ActorSystem[_]) = stuartRoutes
+  override def apiRoutes: ActorSystem[_] => List[ApiRoute] = _ => List(MyStuartWebHooks)
 }
 ```
 

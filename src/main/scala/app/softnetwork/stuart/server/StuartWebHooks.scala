@@ -4,6 +4,7 @@ import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server._
 import app.softnetwork.stuart.config.Settings
 import Settings.Config._
+import app.softnetwork.api.server.ApiRoute
 import app.softnetwork.stuart.message._
 import app.softnetwork.stuart.serialization._
 import com.typesafe.scalalogging.StrictLogging
@@ -13,7 +14,12 @@ import org.json4s.{jackson, Formats}
 
 /** Created by smanciot on 19/04/2021.
   */
-trait StuartWebHooks extends Directives with Json4sSupport with StrictLogging with StuartCallBacks {
+trait StuartWebHooks
+    extends Directives
+    with Json4sSupport
+    with StrictLogging
+    with StuartCallBacks
+    with ApiRoute {
 
   implicit def formats: Formats = stuartFormats
 
@@ -27,7 +33,7 @@ trait StuartWebHooks extends Directives with Json4sSupport with StrictLogging wi
       }
     }
 
-  val stuartRoutes: Route = {
+  val route: Route = {
     pathPrefix(server.path) {
       healthcheck ~ webhooks
     }
