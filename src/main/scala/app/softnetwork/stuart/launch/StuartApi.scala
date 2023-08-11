@@ -1,8 +1,8 @@
 package app.softnetwork.stuart.launch
 
 import app.softnetwork.api.server.{ApiRoutes, ApiServer}
-import app.softnetwork.build.info.stuart.client.scala.BuildInfo
 import app.softnetwork.persistence.schema.SchemaProvider
+import app.softnetwork.stuart.StuartClientScalaBuildInfo
 import com.typesafe.config.{Config, ConfigFactory}
 import org.slf4j.{Logger, LoggerFactory}
 
@@ -26,7 +26,7 @@ trait StuartApi extends ApiServer { _: SchemaProvider with ApiRoutes =>
       |
     """.stripMargin
 
-  override def systemVersion(): String = BuildInfo.version
+  override def systemVersion(): String = StuartClientScalaBuildInfo.version
 
   lazy val akkaConfig: Config =
     ConfigFactory

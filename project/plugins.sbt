@@ -1,13 +1,18 @@
 logLevel := Level.Warn
 
-resolvers += "Typesafe repository" at "https://repo.typesafe.com/typesafe/releases/"
-
-addSbtPlugin("com.typesafe.sbt" % "sbt-git" % "1.0.2")
+resolvers ++= Seq(
+  "Softnetwork releases" at "https://softnetwork.jfrog.io/artifactory/releases/",
+  "Typesafe Server" at "https://repo.typesafe.com/typesafe/releases"
+)
 
 addSbtPlugin("com.typesafe.sbt" % "sbt-native-packager" % "1.3.10")
 
-addSbtPlugin("com.eed3si9n" % "sbt-buildinfo" % "0.9.0")
-
-addSbtPlugin("org.scalameta" % "sbt-scalafmt" % "2.4.6")
-
 addSbtPlugin("org.scoverage" % "sbt-scoverage" % "1.9.3")
+
+addSbtPlugin("app.softnetwork.sbt-softnetwork" % "sbt-softnetwork-git" % "0.1.6")
+
+addSbtPlugin("app.softnetwork.sbt-softnetwork" % "sbt-softnetwork-publish" % "0.1.6")
+
+addSbtPlugin("app.softnetwork.sbt-softnetwork" % "sbt-softnetwork-info" % "0.1.6")
+
+addSbtPlugin("app.softnetwork.sbt-softnetwork" % "sbt-softnetwork-protoc" % "0.1.6")
