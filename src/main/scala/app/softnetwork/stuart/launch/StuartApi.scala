@@ -26,7 +26,8 @@ trait StuartApi extends ApiServer { _: SchemaProvider with ApiRoutes =>
       |
     """.stripMargin
 
-  override def systemVersion(): String = StuartClientScalaBuildInfo.version
+  override def systemVersion(): String =
+    sys.env.getOrElse("VERSION", StuartClientScalaBuildInfo.version)
 
   lazy val akkaConfig: Config =
     ConfigFactory

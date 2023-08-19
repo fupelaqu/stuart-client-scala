@@ -8,7 +8,7 @@ organization := "app.softnetwork.stuart"
 
 name := "stuart-client-scala"
 
-version := "0.5.2"
+version := "0.5.3"
 
 scalaVersion := "2.12.18"
 
@@ -26,8 +26,8 @@ libraryDependencies ++=
   Seq(
     "app.softnetwork.protobuf" %% "scalapb-extensions" % "0.1.8",
     "app.softnetwork.api" %% "generic-client-api" % "0.2.4",
-    "app.softnetwork.api" %% "generic-server-api" % "0.3.5",
-    "app.softnetwork.api" %% "generic-server-api-testkit" % "0.3.5" % Test,
+    "app.softnetwork.api" %% "generic-server-api" % "0.4.0",
+    "app.softnetwork.api" %% "generic-server-api-testkit" % "0.4.0" % Test,
     "org.apache.commons" % "commons-lang3" % "3.12.0"
   )
 
@@ -39,5 +39,5 @@ ThisBuild / libraryDependencySchemes ++= Seq(
 
 lazy val root = project.in(file("."))
   .configs(IntegrationTest)
-  .settings(Defaults.itSettings, Protoc.protocSettings)
+  .settings(Defaults.itSettings, Protoc.protocSettings, app.softnetwork.Info.infoSettings)
   .enablePlugins(JavaAppPackaging, BuildInfoPlugin)

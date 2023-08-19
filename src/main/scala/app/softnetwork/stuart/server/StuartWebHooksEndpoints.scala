@@ -1,6 +1,6 @@
 package app.softnetwork.stuart.server
 
-import app.softnetwork.api.server.{ApiEndpoint, ApiErrors}
+import app.softnetwork.api.server.{ApiErrors, SwaggerApiEndpoint}
 import app.softnetwork.stuart.config.Settings
 import Settings.Config._
 import akka.actor.typed.ActorSystem
@@ -17,7 +17,7 @@ import sttp.tapir.server.ServerEndpoint
 import scala.concurrent.{ExecutionContext, Future}
 
 trait StuartWebHooksEndpoints
-    extends ApiEndpoint
+    extends SwaggerApiEndpoint
     with Tapir
     with SchemaDerivation
     with StuartCallBacks {
