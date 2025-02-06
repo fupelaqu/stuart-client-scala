@@ -23,7 +23,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
 
   val client_reference: String = UUID.randomUUID().toString
 
-  val pickups = List(
+  val pickups: List[Pickup] = List(
     Pickup.defaultInstance
       .withAddress("12 rue rivoli, 75001 Paris")
       .withContact(
@@ -33,7 +33,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
           .withPhone("+33610101010")
       )
   )
-  val dropoffs = List(
+  val dropoffs: List[DropOff] = List(
     DropOff.defaultInstance
       .withClientReference(client_reference)
       .withPackageType(PackageType.small)
