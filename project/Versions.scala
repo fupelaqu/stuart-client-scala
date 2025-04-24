@@ -1,7 +1,7 @@
 object Versions {
 
-  val genericPersistence = "0.6.2.1"
+  val genericPersistence = "0.7.0"
 
-  val clientApi = "0.3-SNAPSHOT"
+  val clientApi = "0.3.0"
 
 }
