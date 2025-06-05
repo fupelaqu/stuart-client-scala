@@ -97,6 +97,13 @@ trait StuartJobApi { _: StuartApi =>
     )
   }
 
+  def cpt(job: JobRequest): Future[Either[StuartError, JobCpt]] = {
+    doPost[RequestJobCpt, JobCpt, StuartError](
+      "/v2/jobs/cpt",
+      RequestJobCpt(job)
+    )
+  }
+
   def createJob(job: JobRequest): Future[Either[StuartError, Job]] = {
     doPost[CreateJob, Job, StuartError](
       "/v2/jobs",

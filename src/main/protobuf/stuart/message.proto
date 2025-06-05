@@ -36,10 +36,16 @@ message ContactRequest{
     optional string company = 5;
 }
 
+message Coordinates{
+    required double lat = 1;
+    required double long = 2;
+}
+
 message Pickup{
     required string address = 1;
     optional string comment = 2;
     optional ContactRequest contact = 3;
+    optional Coordinates coordinates = 4;
 }
 
 message DropOff{
@@ -51,6 +57,7 @@ message DropOff{
     optional ContactRequest contact = 6;
     optional google.protobuf.Timestamp end_customer_time_window_start = 7 [(scalapb.field).type = "java.time.ZonedDateTime", (scalapb.field).scala_name = "end_customer_time_window_start"];
     optional google.protobuf.Timestamp end_customer_time_window_end = 8 [(scalapb.field).type = "java.time.ZonedDateTime", (scalapb.field).scala_name = "end_customer_time_window_end"];
+    optional Coordinates coordinates = 9;
 }
 
 message JobRequest{
@@ -90,6 +97,14 @@ message RequestJobEta{
 
 message JobEta{
     required int32 eta = 1;
+}
+
+message RequestJobCpt{
+    required JobRequest job = 1;
+}
+
+message JobCpt{
+    required int32 seconds = 1; // in seconds
 }
 
 enum JobListingOrder{

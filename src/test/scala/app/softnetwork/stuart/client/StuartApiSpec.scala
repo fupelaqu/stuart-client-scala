@@ -91,7 +91,7 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
         case Right(r) => r.valid.getOrElse(false) shouldBe true
       }
     }
-    "Request a job ETA" in {
+    "Request a job ETA to pickup" in {
       StuartApi().eta(request) sync {
         case Left(l) =>
           logger.error(s"$l")
@@ -99,6 +99,16 @@ class StuartApiSpec extends AnyWordSpecLike with Matchers with StrictLogging {
         case Right(r) =>
           logger.info(s"$r")
           r.eta >= 0 shouldBe true
+      }
+    }
+    "Request a job ETA to dropoff" in {
+      StuartApi().cpt(request) sync {
+        case Left(l) =>
+          logger.error(s"$l")
+          fail(l.message)
+        case Right(r) =>
+          logger.info(s"$r")
+          r.seconds >= 0 shouldBe true
       }
     }
     "Create a job" in {

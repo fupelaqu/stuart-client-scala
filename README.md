@@ -167,12 +167,21 @@ StuartApi().validateJob(request) sync {
 }
 ```
 
-### Request a job ETA
+### Request a job ETA to pickup
 
 ```scala
 StuartApi().eta(request) sync {
   case Left(l: StuartError) => // ... do something with StuartError 
   case Right(r: JobEta) => // ... eg JobEta(eta = 54)
+}
+```
+
+### Request a job ETA to dropoff
+
+```scala
+StuartApi().cpt(request) sync {
+  case Left(l: StuartError) => // ... do something with StuartError 
+  case Right(r: JobCpt) => // ... eg JobCpt(seconds = 600)
 }
 ```
 
