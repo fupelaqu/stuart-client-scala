@@ -19,5 +19,6 @@ case class StuartClientConfig(
       "https://api.stuart.com"
     }
   }
+  override lazy val debug: Boolean = dryRun
 
 }
